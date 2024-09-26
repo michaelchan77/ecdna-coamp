@@ -1,0 +1,14 @@
+Neo4j Cypher commands
+
+Nodes:
+- LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_nodes.csv' AS row
+- CREATE (n:Node { id: toInteger(row.id)-1, name: row.label, oncogene: row.oncogene_status});
+
+Edges:
+- CREATE INDEX FOR (n:Node) ON (n.id);
+- LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
+- MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
+- MERGE (a)-[:COAMP {weight: toFloat(row.weight), samples: toInteger(row.numsamples)}]->(b);
+
+Password:
+- ALTER USER neo4j SET PASSWORD 'your_new_password';

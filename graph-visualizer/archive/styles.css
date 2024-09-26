@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #ededed;
+}
+.header {
+    text-align: center;
+    font-size: 30px;
+    padding: 10px;
+}
+/* Gene input button */
+
+/* Ensure the container uses Flexbox */
+.text-storage {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Align items vertically */
+    gap: 10px; /* Space between textarea and button */
+}
+textarea {
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+    font-size: 16px;
+    outline: none;
+    resize: none;
+    margin-bottom: 10px;
+}
+button {
+    height: 30px;
+    /* padding: 10px; */
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+/* Edgeweight slider */
+.settings {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 30px; 
+}
+.edge-slider {
+    margin: 20px 0;
+    position: relative;
+    /* flex-direction: column; */
+}
+.slider-label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.slider {
+    width: 300px;
+}
+.slider-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 5px;
+    gap: 10px;
+}
+.slider-info input {
+    width: 100px;
+    text-align: center;
+}
+
+/* Define the size of the container for Cytoscape */
+#cy {
+    margin: auto;
+    width: 85%;
+    aspect-ratio: 16 / 9;
+    /* height: 500px; Adjust height as needed */
+    background-color: white;
+    border-style: solid;
+    border-color: lightgray;
+}

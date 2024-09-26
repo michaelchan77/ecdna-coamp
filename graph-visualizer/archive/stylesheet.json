@@ -1,0 +1,66 @@
+[
+    {
+      "selector": "node",
+      "style": {
+        "shape": "data(shape)",
+        "width": "40px",
+        "height": "40px",
+        "background-color": "data(oncogene_status_color)",
+        "border-width": "2px",
+        "border-color": "#000",
+        "label": "data(label)",
+        "font-size": "12px",
+        "text-valign": "center",
+        "text-halign": "center"
+      }
+    },
+    {
+      "selector": "edge",
+      "style": {
+        "width": "2px",
+        "line-color": "#ddd",
+        "target-arrow-shape": "data(arrow)",
+        "target-arrow-color": "#000",
+        "curve-style": "bezier",
+        "label": "data(label)",
+        "font-size": "10px",
+        "text-margin-y": "10px"
+      }
+    },
+    {
+      "selector": "node:hover",
+      "style": {
+        "background-color": "#ff5733",
+        "border-width": "3px",
+        "border-color": "#ff0000"
+      }
+    },
+    {
+      "selector": "node:selected",
+      "style": {
+        "background-color": "#00ff00",
+        "border-width": "4px",
+        "border-color": "#0000ff"
+      }
+    },
+    {
+      "selector": "edge:hover",
+      "style": {
+        "line-color": "#ff5733",
+        "target-arrow-color": "#ff5733"
+      }
+    },
+    {
+      "selector": "edge:selected",
+      "style": {
+        "line-color": "#00ff00",
+        "target-arrow-color": "#00ff00"
+      }
+    },
+    {
+      "selector": "background",
+      "style": {
+        "background-color": "#f0f0f0"
+      }
+    }
+  ]

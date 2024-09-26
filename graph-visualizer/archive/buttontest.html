@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text and Slider Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        textarea {
+            width: 300px;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .slider-container {
+            margin: 20px 0;
+            position: relative;
+        }
+        .slider-label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .slider {
+            width: 300px;
+        }
+        .slider-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .slider-info input {
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text and Slider Storage</h1>
+        <textarea id="textBox" placeholder="Type genes in here..."></textarea><br>
+        <button onclick="storeData()">Store Data</button>
+        <p id="storedText">Stored text will appear here.</p>
+
+        <div class="slider-container">
+            <label class="slider-label" for="edgeWeight">Edge Weight:</label>
+            <input type="range" id="edgeWeight" class="slider" min="0" max="1" step="0.01" value="0">
+            <div class="slider-info">
+                <label for="sliderMin">Min: 0</label>
+                <span id="sliderValue">Current Value: 0</span>
+                <label for="sliderMax">Max: 1</label>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function storeData() {
+            // Get values from the text box and slider
+            var textBox = document.getElementById('textBox');
+            var text = textBox.value;
+            var slider = document.getElementById('edgeWeight');
+            var sliderValue = slider.value;
+
+            // Store the text and slider value in local storage
+            localStorage.setItem('storedText', text);
+            localStorage.setItem('sliderValue', sliderValue);
+
+            // Display the stored text and slider value
+            displayStoredData();
+        }
+
+        function displayStoredData() {
+            // Get stored data from local storage
+            var storedText = localStorage.getItem('storedText') || 'No text stored.';
+            var storedSliderValue = localStorage.getItem('sliderValue') || '0';
+
+            // Update the display
+            document.getElementById('storedText').textContent = 'Stored Text: ' + storedText;
+            document.getElementById('sliderValue').textContent = 'Current Value: ' + storedSliderValue;
+
+            // Set the slider to the stored value
+            document.getElementById('edgeWeight').value = storedSliderValue;
+        }
+
+        function updateSlider() {
+            var slider = document.getElementById('edgeWeight');
+            var min = parseFloat(document.getElementById('sliderMin').value);
+            var max = parseFloat(document.getElementById('sliderMax').value);
+
+            // Update the slider's min and max attributes
+            slider.min = min;
+            slider.max = max;
+
+            // Ensure the current slider value is within the new range
+            if (parseFloat(slider.value) < min) slider.value = min;
+            if (parseFloat(slider.value) > max) slider.value = max;
+
+            // Update the display of the current slider value
+            document.getElementById('sliderValue').textContent = 'Current Value: ' + slider.value;
+        }
+
+        // Update slider value display
+        document.getElementById('edgeWeight').addEventListener('input', function() {
+            document.getElementById('sliderValue').textContent = 'Current Value: ' + this.value;
+        });
+
+        // Update slider min and max on input change
+        document.getElementById('sliderMin').addEventListener('input', updateSlider);
+        document.getElementById('sliderMax').addEventListener('input', updateSlider);
+
+        // Display stored data on page load
+        window.onload = function() {
+            displayStoredData();
+            updateSlider(); // Ensure slider reflects initial min/max values
+        };
+    </script>
+</body>
+</html>

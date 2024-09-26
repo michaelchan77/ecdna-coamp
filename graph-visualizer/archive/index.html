@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coamplification Visualizer</title>
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <!-- cytoscape -->
+    <script src="https://unpkg.com/cytoscape@3.22.0/dist/cytoscape.min.js"></script>
+    <!-- cytoscape-fcose -->
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+    <script src="https://unpkg.com/cytoscape-fcose/cytoscape-fcose.js"></script>
+    <!-- container styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header" id="titleText">ecDNA Coamplification Tool</div>
+    <!-- gene input button -->
+    <div class="text-storage">
+        <textarea id="textBox" placeholder="Enter gene"></textarea>
+        <button id="storeButton">→</button>
+        <p id="storedText">Loading...</p>
+    </div>
+    <!-- container for cytoscape graph -->
+    <div id="cy"></div>
+
+    <div class="settings">
+        <!-- edge slider -->
+        <div class="edge-slider">
+            Edge weight minimum: 
+            <span id="sliderValue">0</span>
+            <div class="slider-info">
+                <div class="value-left">0</div>
+                <input type="range" id="edgeWeight" class="slider" min="0" max="1" step="0.01" value="0">
+                <div class="value-right">1</div>
+            </div>
+        </div>
+        <!-- samples slider -->
+        <div class="edge-slider">
+            Sample minimum: 
+            <span id="sampleValue">0</span>
+            <div class="slider-info">
+                <div class="value-left">0</div>
+                <input type="range" id="numSamples" class="slider" min="0" max="10" step="1" value="0">
+                <div class="value-right">10</div>
+            </div>
+        </div>
+        <!-- oncogene button -->
+        <div class="edge-slider">
+            <span>Oncogenes only</span>
+            <input type="checkbox" id="oncogenes_only">
+    </div>
+
+    <!-- Initialize Cytoscape.js -->
+    <script src="main_alt.js"></script>
+
+    <script>
+        // Update slider value displays
+        document.getElementById('edgeWeight').addEventListener('input', function() {
+            document.getElementById('sliderValue').textContent = this.value;
+        });
+        document.getElementById('numSamples').addEventListener('input', function() {
+            document.getElementById('sampleValue').textContent = this.value;
+        });
+
+        // Chat-GPT scraps
+        /*
+        function storeData() {
+            // Get values from the text box and slider
+            var textBox = document.getElementById('textBox');
+            var text = textBox.value;
+            var slider = document.getElementById('edgeWeight');
+            var sliderValue = slider.value;
+
+            // Store the text and slider value in local storage
+            localStorage.setItem('storedText', text);
+            localStorage.setItem('sliderValue', sliderValue);
+
+            // Display the stored text and slider value
+            displayStoredData();
+        }
+
+        function displayStoredData() {
+            // Get stored data from local storage
+            var storedText = localStorage.getItem('storedText') || 'No text stored.';
+            var storedSliderValue = localStorage.getItem('sliderValue') || '0';
+
+            // Update the display
+            document.getElementById('storedText').textContent = 'Stored Text: ' + storedText;
+            document.getElementById('sliderValue').textContent = 'Min Edgeweight: ' + storedSliderValue;
+
+            // Set the slider to the stored value
+            document.getElementById('edgeWeight').value = storedSliderValue;
+        }
+
+        function updateSlider() {
+            var slider = document.getElementById('edgeWeight');
+
+            // Ensure the current slider value is within the new range
+            if (parseFloat(slider.value) < min) slider.value = min;
+            if (parseFloat(slider.value) > max) slider.value = max;
+
+            // Update the display of the current slider value
+            document.getElementById('sliderValue').textContent = 'Current Value: ' + slider.value;
+        }
+        // Display stored data on page load
+        window.onload = function() {
+            displayStoredData();
+            updateSlider(); // Ensure slider reflects initial min/max values
+        };
+        */
+    </script>
+</body>
+</html>
