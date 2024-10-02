@@ -12,6 +12,10 @@
     <script src="https://unpkg.com/layout-base/layout-base.js"></script>
     <script src="https://unpkg.com/cose-base/cose-base.js"></script>
     <script src="https://unpkg.com/cytoscape-fcose/cytoscape-fcose.js"></script>
+    <!-- cytoscape popper, tippy -->
+    <script src="https://unpkg.com/cytoscape-popper@2.0.0/cytoscape-popper.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+	<script src="https://unpkg.com/tippy.js@6"></script>
     <!-- container styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -21,7 +25,7 @@
     <div class="text-storage">
         <textarea id="textBox" placeholder="Enter gene"></textarea>
         <button id="storeButton">→</button>
-        <p id="storedText">Loading...</p>
+        <p id="storedText"></p>
     </div>
     <!-- container for cytoscape graph -->
     <div id="cy"></div>
@@ -54,9 +58,11 @@
     </div>
 
     <!-- Initialize Cytoscape.js -->
-    <script src="main_alt.js"></script>
+    <script src="frontend.js"></script>
 
     <script>
+        // Update graph with button click
+        $('#storeButton').on('click', loadGraph);
         // Update slider value displays
         document.getElementById('edgeWeight').addEventListener('input', function() {
             document.getElementById('sliderValue').textContent = this.value;
@@ -64,53 +70,6 @@
         document.getElementById('numSamples').addEventListener('input', function() {
             document.getElementById('sampleValue').textContent = this.value;
         });
-
-        // Chat-GPT scraps
-        /*
-        function storeData() {
-            // Get values from the text box and slider
-            var textBox = document.getElementById('textBox');
-            var text = textBox.value;
-            var slider = document.getElementById('edgeWeight');
-            var sliderValue = slider.value;
-
-            // Store the text and slider value in local storage
-            localStorage.setItem('storedText', text);
-            localStorage.setItem('sliderValue', sliderValue);
-
-            // Display the stored text and slider value
-            displayStoredData();
-        }
-
-        function displayStoredData() {
-            // Get stored data from local storage
-            var storedText = localStorage.getItem('storedText') || 'No text stored.';
-            var storedSliderValue = localStorage.getItem('sliderValue') || '0';
-
-            // Update the display
-            document.getElementById('storedText').textContent = 'Stored Text: ' + storedText;
-            document.getElementById('sliderValue').textContent = 'Min Edgeweight: ' + storedSliderValue;
-
-            // Set the slider to the stored value
-            document.getElementById('edgeWeight').value = storedSliderValue;
-        }
-
-        function updateSlider() {
-            var slider = document.getElementById('edgeWeight');
-
-            // Ensure the current slider value is within the new range
-            if (parseFloat(slider.value) < min) slider.value = min;
-            if (parseFloat(slider.value) > max) slider.value = max;
-
-            // Update the display of the current slider value
-            document.getElementById('sliderValue').textContent = 'Current Value: ' + slider.value;
-        }
-        // Display stored data on page load
-        window.onload = function() {
-            displayStoredData();
-            updateSlider(); // Ensure slider reflects initial min/max values
-        };
-        */
     </script>
 </body>
 </html>

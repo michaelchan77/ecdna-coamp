@@ -1,9 +1,14 @@
 from flask import Flask, jsonify, request, g
+from flask_cors import CORS
 from neo4j import GraphDatabase
 
 import json
 
 app = Flask(__name__)
+
+# Only allow requests from frontend domain
+# CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5500"}})
+CORS(app)
 
 def get_driver():
     # Connect to Neo4j instance
@@ -38,20 +43,22 @@ def fetch_subgraph(driver, name):
                                }})
     return nodes, edges
 
-# @app.route('/getNodeData', methods=['GET'])
-# def get_node_data():
-#     node_id = request.args.get('name')
+@app.route('/getNodeData', methods=['GET'])
+def get_node_data():
+    driver = get_driver()
+    node_id = request.args.get('name')
+    print(node_id)
+    # Create a session and run fetch_subgraph
+    with driver.session() as session:
+        nodes, edges = session.execute_read(fetch_subgraph, node_id)
 
-#     with driver.session() as session:
-#         nodes, edges = session.read_transaction(fetch_subgraph, node_id)
-
-#         if nodes:
-#             return jsonify({
-#                 'nodes': nodes,
-#                 'edges': edges
-#             })
-#         else:
-#             return jsonify({"error": "Node not found"}), 404
+        if nodes:
+            return jsonify({
+                'nodes': nodes,
+                'edges': edges
+            })
+        else:
+            return jsonify({"error": "Node not found"}), 404
         
 # Ensure proper resource cleanup
 @app.teardown_appcontext
@@ -79,6 +86,6 @@ def test_fetch_subgraph():
             json.dump(output, outfile, indent=4)
 
 if __name__ == '__main__':
-    with app.app_context():  # Create an application context
-        test_fetch_subgraph()  # Call this to test fetch_subgraph
+    # with app.app_context():  # Create an application context
+    #     test_fetch_subgraph()  # Call this to test fetch_subgraph
     app.run(debug=True)

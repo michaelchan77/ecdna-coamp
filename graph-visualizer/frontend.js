@@ -1,5 +1,5 @@
 async function loadGraph() {
-    const inputNode = document.getElementById("searchNode").value;
+    const inputNode = $('#textBox').val().trim().toUpperCase();
 
     // Clear any existing graph
     document.getElementById('cy').innerHTML = '';
@@ -7,7 +7,6 @@ async function loadGraph() {
     // Fetch the subgraph data from your Flask server
     try {
         const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}`);
-
         if (!response.ok) {
             throw new Error(`Node ${inputNode} not found or server error.`);
         }
@@ -19,10 +18,10 @@ async function loadGraph() {
             container: document.getElementById('cy'),
             elements: data,  // Use the data from the server
             style: [
-                { selector: 'node', style: { 'background-color': '#666', 'label': 'data(id)' } },
+                { selector: 'node', style: { 'background-color': '#666', 'label': 'data(name)' } },
                 { selector: 'edge', style: { 'width': 2, 'line-color': '#ccc' } }
             ],
-            layout: { name: 'grid' }
+            layout: { name: 'fcose' }
         });
 
     } catch (error) {
