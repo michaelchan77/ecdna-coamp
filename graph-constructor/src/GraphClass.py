@@ -226,13 +226,15 @@ class Graph:
 			for end in ends:
 				if end[3] == "in":
 					# edgelist.append((start.GetLabel(), end[1].GetLabel(), end[2], len(start.Union(end[1]))))
-					edgelist.append((start.GetID(), end[1].GetID(), end[2], len(start.Union(end[1]))))
+					# format sample list
+					union = [s.split("_")[0] for s in start.Union(end[1])]
+					edgelist.append((start.GetID(), end[1].GetID(), end[2], len(union), '|'.join(union)))
 		# export edge list
 		with open(outfile, 'wt') as f:
 			writer = csv.writer(f) #, delimiter='\t')
-			writer.writerow(['source', 'target', 'weight', 'num-samples'])
+			writer.writerow(['source', 'target', 'weight', 'lenunion', 'union'])
 			for edge in edgelist:
-				writer.writerow([edge[0], edge[1], edge[2], edge[3]])
+				writer.writerow([edge[0], edge[1], edge[2], edge[3], edge[4]])
 		# export node list (for oncogene status)
 		if nodefile is not None:
 			with open(nodefile, 'wt') as f:

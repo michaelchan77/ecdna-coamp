@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', function () {
+    cytoscape.use(cytoscapePopper(tippyFactory));
+});
+
 async function loadGraph() {
     const inputNode = $('#textBox').val().trim().toUpperCase();
 
@@ -24,7 +28,35 @@ async function loadGraph() {
             layout: { name: 'fcose' }
         });
 
+        cy.nodes().forEach(node => {
+            
+        });
+
     } catch (error) {
         alert(error.message);
     }
+}
+
+// https://github.com/cytoscape/cytoscape.js-popper/blob/master/demo-tippy.html
+function tippyFactory(ref, content){
+    // Since tippy constructor requires DOM element/elements, create a placeholder
+    var dummyDomEle = document.createElement('div');
+
+    var tip = tippy( dummyDomEle, {
+        getReferenceClientRect: ref.getBoundingClientRect,
+        trigger: 'manual', // mandatory
+        // dom element inside the tippy:
+        content: content,
+        // your own preferences:
+        arrow: true,
+        placement: 'bottom',
+        hideOnClick: false,
+        sticky: "reference",
+
+        // if interactive:
+        interactive: true,
+        appendTo: document.body // or append dummyDomEle to document.body
+    } );
+
+    return tip;
 }

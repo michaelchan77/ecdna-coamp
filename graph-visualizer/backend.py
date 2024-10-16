@@ -37,7 +37,8 @@ def fetch_subgraph(driver, name):
         edges.append({'data': {'source': record['n']['id'], 
                                'target': record['m']['id'],
                                'weight': record['r']['weight'],
-                               'samples': record['r']['samples'],
+                               'lenunion': record['r']['lenunion'],
+                               'union': record['r']['union'],
                                'name': record['n']['name'] + ' (interacts with) ' + record['m']['name'],
                                'interaction': 'interacts with'
                                }})
@@ -86,6 +87,8 @@ def test_fetch_subgraph():
             json.dump(output, outfile, indent=4)
 
 if __name__ == '__main__':
+    app.run(debug=True)
+    # # To see json output for test node, uncomment this and comment 'app.run'
     # with app.app_context():  # Create an application context
     #     test_fetch_subgraph()  # Call this to test fetch_subgraph
-    app.run(debug=True)
+    
