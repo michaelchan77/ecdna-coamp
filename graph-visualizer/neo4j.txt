@@ -12,9 +12,3 @@ Edges:
 
 Password:
 - ALTER USER neo4j SET PASSWORD 'your_new_password';
-
-
-new edge import:
-LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
-MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
-MERGE (a)-[:COAMP {weight: toFloat(row.weight), lenunion: toInteger(row.lenunion), union: split(row.union, '|')}]->(b);

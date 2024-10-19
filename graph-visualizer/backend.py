@@ -91,4 +91,3 @@ if __name__ == '__main__':
     # # To see json output for test node, uncomment this and comment 'app.run'
     # with app.app_context():  # Create an application context
     #     test_fetch_subgraph()  # Call this to test fetch_subgraph
-    
