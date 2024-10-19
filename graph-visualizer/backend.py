@@ -17,12 +17,20 @@ def get_driver():
         g.neo4j_driver = GraphDatabase.driver(uri, auth=("neo4j", "password"))
     return g.neo4j_driver
 
-def fetch_subgraph(driver, name):
-    query = """
-    MATCH (n)-[r]-(m)
-    WHERE n.name = $name
-    RETURN n, r, m
-    """
+def fetch_subgraph(driver, name, all_edges):
+    if all_edges:
+        query = """
+        MATCH (n)-[r]-(m)
+        WHERE n.name = $name
+        OPTIONAL MATCH (m)-[r2]-(o)
+        RETURN n, r, m, r2, o
+        """
+    else:
+        query = """
+        MATCH (n)-[r]-(m)
+        WHERE n.name = $name
+        RETURN n, r, m
+        """
     result = driver.run(query, name=name)
     nodes = []
     edges = []
@@ -42,16 +50,27 @@ def fetch_subgraph(driver, name):
                                'name': record['n']['name'] + ' (interacts with) ' + record['m']['name'],
                                'interaction': 'interacts with'
                                }})
+        if all_edges and record.get('r2') and record.get('o'):
+            edges.append({'data': {'source': record['m']['id'], 
+                                   'target': record['o']['id'],
+                                   'weight': record['r2']['weight'],
+                                   'lenunion': record['r2']['lenunion'],
+                                   'union': record['r2']['union'],
+                                   'name': record['m']['name'] + ' (interacts with) ' + record['o']['name'],
+                                   'interaction': 'interacts with'}})
     return nodes, edges
 
 @app.route('/getNodeData', methods=['GET'])
 def get_node_data():
     driver = get_driver()
     node_id = request.args.get('name')
+    all_edges = request.args.get('all_edges', 'false').lower() == 'true'  # Get all_edges parameter
     print(node_id)
+    print(all_edges)
+
     # Create a session and run fetch_subgraph
     with driver.session() as session:
-        nodes, edges = session.execute_read(fetch_subgraph, node_id)
+        nodes, edges = session.execute_read(fetch_subgraph, node_id, all_edges)
 
         if nodes:
             return jsonify({

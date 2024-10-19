@@ -55,6 +55,12 @@
         <div class="edge-slider">
             <span>Oncogenes only</span>
             <input type="checkbox" id="oncogenes_only">
+        </div>
+        <!-- show all edges between nodes checkbox -->
+        <div class="edge-slider">
+            <span>Show all edges</span>
+            <input type="checkbox" id="all_edges">
+        </div>
     </div>
 
     <!-- Initialize Cytoscape.js -->
@@ -63,6 +69,8 @@
     <script>
         // Update graph with button click
         $('#storeButton').on('click', loadGraph);
+        // Update graph with all-edges checked
+        $('#all_edges').on('change', loadGraph);
         // Update slider value displays
         document.getElementById('edgeWeight').addEventListener('input', function() {
             document.getElementById('sliderValue').textContent = this.value;

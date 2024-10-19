@@ -4,13 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function loadGraph() {
     const inputNode = $('#textBox').val().trim().toUpperCase();
+    const allEdgesChecked = $('#all_edges').is(':checked');  // Get the state of the all_edges checkbox
 
     // Clear any existing graph
     document.getElementById('cy').innerHTML = '';
 
     // Fetch the subgraph data from your Flask server
     try {
-        const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}`);
+        const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}&all_edges=${allEdgesChecked}`);
         if (!response.ok) {
             throw new Error(`Node ${inputNode} not found or server error.`);
         }
