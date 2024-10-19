@@ -23,6 +23,7 @@ def fetch_subgraph(driver, name, all_edges):
         MATCH (n)-[r]-(m)
         WHERE n.name = $name
         OPTIONAL MATCH (m)-[r2]-(o)
+        MATCH (o)-[r3]-(n)
         RETURN n, r, m, r2, o
         """
     else:
