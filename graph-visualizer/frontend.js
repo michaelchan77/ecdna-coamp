@@ -3,8 +3,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function loadGraph() {
+    // input gene
     const inputNode = $('#textBox').val().trim().toUpperCase();
 
+    // filters
+    const minWeight = parseFloat($('#edgeWeight').val());
+    const sampleMinimum = parseFloat($('#numSamples').val());
+    const oncogenesChecked = $('#oncogenes_only').is(':checked');
+    const allEdgesChecked = $('#all_edges').is(':checked');
+    // print vars
+    document.getElementById('storedText').textContent = String([minWeight, sampleMinimum, oncogenesChecked, allEdgesChecked]);
+    
+    // alert
     if (!inputNode) {
         alert("Please enter a gene name.");
         return;
@@ -15,7 +25,7 @@ async function loadGraph() {
 
     // Fetch the subgraph data from your Flask server
     try {
-        const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}`);
+        const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}&min_weight=${minWeight}&min_samples=${sampleMinimum}&oncogenes=${oncogenesChecked}&all_edges=${allEdgesChecked}`);
         if (!response.ok) {
             throw new Error(`Node ${inputNode} not found or server error.`);
         }
@@ -35,60 +45,63 @@ async function loadGraph() {
             layout: { name: 'fcose' }
         });
 
-        // Store reference to current subset
-        let currentSubset = cy
+        cy.nodes().forEach(node => {
 
-        document.getElementById('edgeWeight').addEventListener('change', updateVisibleElements);
-        document.getElementById('numSamples').addEventListener('change', updateVisibleElements);
+        });
+        // // Store reference to current subset
+        // let currentSubset = cy
 
-        // Function to update visible elements based on sliders
-        function updateVisibleElements() {
-            if (currentSubset.length === 0) return; // Do nothing if no subset is selected
+        // document.getElementById('edgeWeight').addEventListener('change', updateVisibleElements);
+        // document.getElementById('numSamples').addEventListener('change', updateVisibleElements);
 
-            let sliderValue = parseFloat($('#edgeWeight').val());
-            let sampleVal = parseInt($('#numSamples').val());
+        // // Function to update visible elements based on sliders
+        // function updateVisibleElements() {
+        //     if (currentSubset.length === 0) return; // Do nothing if no subset is selected
 
-            // Show all edges within subset
-            currentSubset.show();
+        //     let sliderValue = parseFloat($('#edgeWeight').val());
+        //     let sampleVal = parseInt($('#numSamples').val());
 
-            // Hide edges with weight < slider value
-            currentSubset.edges().forEach(edge => {
-                const weight = edge.data('weight');
-                const numSamples = edge.data('total_samples');
+        //     // Show all edges within subset
+        //     currentSubset.show();
 
-                if (weight < sliderValue || numSamples < sampleVal) {
-                    edge.hide();
-                    edge.connectedNodes().hide(); // Hide connected nodes
-                }
-            });
+        //     // Hide edges with weight < slider value
+        //     currentSubset.edges().forEach(edge => {
+        //         const weight = edge.data('weight');
+        //         const numSamples = edge.data('total_samples');
 
-            // Fit the viewport to the remaining visible elements
-            cy.fit(currentSubset);
-        }
+        //         if (weight < sliderValue || numSamples < sampleVal) {
+        //             edge.hide();
+        //             edge.connectedNodes().hide(); // Hide connected nodes
+        //         }
+        //     });
 
-        // Checkbox handler for oncogenes
-        let nonOncogenesSubset = null;
+        //     // Fit the viewport to the remaining visible elements
+        //     cy.fit(currentSubset);
+        // }
 
-        document.getElementById('oncogenes_only').addEventListener('change', toggleOncogenes);
+        // // Checkbox handler for oncogenes
+        // let nonOncogenesSubset = null;
 
-        function toggleOncogenes(event) {
-            const isChecked = event.target.checked;
+        // document.getElementById('oncogenes_only').addEventListener('change', toggleOncogenes);
 
-            if (isChecked) {
-                currentSubset.nodes().forEach(node => {
-                    const oncogene_status = node.data('oncogene_status');
+        // function toggleOncogenes(event) {
+        //     const isChecked = event.target.checked;
+
+        //     if (isChecked) {
+        //         currentSubset.nodes().forEach(node => {
+        //             const oncogene_status = node.data('oncogene_status');
     
-                    if (!oncogene_status) {
-                        node.hide();
-                        node.connectEdges().hide(); // Hide connected nodes
-                    }
-                });
-                cy.fit(currentSubset);
-            }
-            else {
-                currentSubset.fit();
-            }
-        }
+        //             if (!oncogene_status) {
+        //                 node.hide();
+        //                 node.connectEdges().hide(); // Hide connected nodes
+        //             }
+        //         });
+        //         cy.fit(currentSubset);
+        //     }
+        //     else {
+        //         currentSubset.fit();
+        //     }
+        // }
 
     } catch (error) {
         alert(error.message);
