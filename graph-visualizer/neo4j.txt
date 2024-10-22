@@ -1,14 +1,17 @@
 Neo4j Cypher commands
 
 Nodes:
-- LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_nodes.csv' AS row
-- CREATE (n:Node { id: toInteger(row.id)-1, name: row.label, oncogene: row.oncogene_status});
+LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_nodes.csv' AS row
+CREATE (n:Node { id: toInteger(row.id)-1, name: row.label, oncogene: row.oncogene_status});
 
 Edges:
-- CREATE INDEX FOR (n:Node) ON (n.id);
-- LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
-- MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
-- MERGE (a)-[:COAMP {weight: toFloat(row.weight), samples: toInteger(row.numsamples)}]->(b);
+CREATE INDEX FOR (n:Node) ON (n.id);
+# Kyra: SHOW INDEXES
+# Kyra: DROP INDEX index_name (for all indices)
+# Kyra: CREATE INDEX index_by_id FOR (n:Node) ON (n.id);
+LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
+MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
+MERGE (a)-[:COAMP {weight: toFloat(row.weight), samples: toInteger(row.lenunion)}]->(b);
 
 Password:
 - ALTER USER neo4j SET PASSWORD 'your_new_password';
@@ -18,3 +21,13 @@ new edge import:
 LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
 MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
 MERGE (a)-[:COAMP {weight: toFloat(row.weight), lenunion: toInteger(row.lenunion), union: split(row.union, '|')}]->(b);
+
+
+Load edges between neighbors:
+MATCH (n {name: "ERBB2"})-[r]-(m)
+WHERE r.weight >= 0.8
+OPTIONAL MATCH (m)-[r2]-(o)
+WHERE r2.weight >= 0.8
+MATCH (o)-[r3]-(n)
+WHERE r3.weight >= 0.8
+RETURN n, r, m, r2, o

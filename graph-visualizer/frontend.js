@@ -3,15 +3,23 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function loadGraph() {
+    // input gene
     const inputNode = $('#textBox').val().trim().toUpperCase();
-    const allEdgesChecked = $('#all_edges').is(':checked');  // Get the state of the all_edges checkbox
+    
+    // filters
+    const minWeight = parseFloat($('#edgeWeight').val());
+    const sampleMinimum = parseFloat($('#numSamples').val());
+    const oncogenesChecked = $('#oncogenes_only').is(':checked');
+    const allEdgesChecked = $('#all_edges').is(':checked');
+    
+    document.getElementById('storedText').textContent = String([minWeight, sampleMinimum, oncogenesChecked, allEdgesChecked]);
 
     // Clear any existing graph
     document.getElementById('cy').innerHTML = '';
 
     // Fetch the subgraph data from your Flask server
     try {
-        const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}&all_edges=${allEdgesChecked}`);
+        const response = await fetch(`http://127.0.0.1:5000/getNodeData?name=${inputNode}&min_weight=${minWeight}&min_samples=${sampleMinimum}&oncogenes=${oncogenesChecked}&all_edges=${allEdgesChecked}`);
         if (!response.ok) {
             throw new Error(`Node ${inputNode} not found or server error.`);
         }
