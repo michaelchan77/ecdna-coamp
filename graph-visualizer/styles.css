@@ -1,80 +1,109 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    background-color: #ededed;
+    background-color: #f4f6f9; /* Light background for a clean look */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern font */
+    color: #333; /* Dark text for contrast */
 }
+
 .header {
     text-align: center;
-    font-size: 30px;
-    padding: 10px;
+    font-size: 2.5rem; /* Larger font size for emphasis */
+    padding: 30px 0;
+    color: #2c3e50; /* Darker shade for professionalism */
 }
-/* Gene input button */
 
-/* Ensure the container uses Flexbox */
 .text-storage {
     display: flex;
     justify-content: center;
-    align-items: center; /* Align items vertically */
-    gap: 10px; /* Space between textarea and button */
+    align-items: center;
+    gap: 20px; /* Increased space for a less cluttered feel */
 }
+
 textarea {
-    width: 150px;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 5px;
-    font-size: 16px;
+    width: 250px; /* Wider for better usability */
+    height: 60px; /* Taller for better visibility */
+    padding: 15px; /* Ample padding for comfort */
+    font-size: 2rem; /* Responsive font size */
+    border: 1px solid #66aaff; /* Soft blue border for clarity */
+    border-radius: 4px; /* Rounded corners */
     outline: none;
     resize: none;
-    margin-bottom: 10px;
+    transition: border-color 0.3s; /* Smooth transition */
 }
+
+textarea:focus {
+    border-color: #0056b3; /* Darker blue border on focus */
+}
+
 button {
-    height: 30px;
-    /* padding: 10px; */
-    font-size: 16px;
+    height: 60px; /* Increased button size */
+    font-size: 1rem; /* Consistent font size */
     cursor: pointer;
-    margin-bottom: 10px;
+    padding: 0 30px; /* Horizontal padding for better touch targets */
+    background-color: #ff4757; /* Vibrant coral color */
+    color: white; /* White text for contrast */
+    border: none;
+    border-radius: 4px; /* Rounded corners */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
 }
-/* Edgeweight slider */
+
+button:hover {
+    background-color: #e04347; /* Darker coral shade on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
 .settings {
     text-align: center;
     display: flex;
     justify-content: center;
-    gap: 30px; 
+    gap: 50px; /* Increased space for minimalism */
+    margin-top: 20px;
 }
+
 .edge-slider {
     margin: 20px 0;
-    position: relative;
-    /* flex-direction: column; */
 }
+
 .slider-label {
-    display: block;
-    font-size: 16px;
+    font-size: 1rem; /* Clean font size */
     margin-bottom: 5px;
+    color: #555; /* Softer color for labels */
 }
+
 .slider {
-    width: 300px;
+    width: 300px; /* Consistent width */
 }
+
 .slider-info {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
+    font-size: 0.875rem; /* Smaller font size for info */
     margin-top: 5px;
-    gap: 10px;
+    gap: 15px; /* Consistent spacing */
 }
+
 .slider-info input {
-    width: 100px;
+    width: 80px; /* Adjusted width for balance */
     text-align: center;
+    border: 1px solid #66aaff; /* Soft blue border */
+    border-radius: 4px; /* Rounded corners */
 }
 
 /* Define the size of the container for Cytoscape */
 #cy {
     margin: auto;
-    width: 85%;
+    width: 90%; /* Slightly wider for better usage */
     aspect-ratio: 16 / 9;
-    /* height: 500px; Adjust height as needed */
     background-color: white;
-    border-style: solid;
-    border-color: lightgray;
+    border: 1px solid #eaeaea; /* Light border for a minimal feel */
+    border-radius: 8px; /* Slightly larger radius for elegance */
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Add some padding inside the container */
+    margin-top: 20px
 }
