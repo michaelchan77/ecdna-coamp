@@ -17,12 +17,30 @@ def get_driver():
         g.neo4j_driver = GraphDatabase.driver(uri, auth=("neo4j", "password"))
     return g.neo4j_driver
 
-def fetch_subgraph(driver, name):
-    query = """
-    MATCH (n)-[r]-(m)
-    WHERE n.name = $name
-    RETURN n, r, m
-    """
+def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
+    print("From fetch_subgraph: ")
+    print(name)
+    print(min_weight)
+    print(min_samples)
+    print(oncogenes)
+    print(all_edges)
+    print()
+    if all_edges:
+        query = """
+        MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
+        WHERE n.name = $name
+        OPTIONAL MATCH (m)-[r2 WHERE r2.weight > $min_weight and r2.lenunion > $min_samples]-(o)
+        MATCH (o)-[r3 WHERE r3.weight > $min_weight and r3.lenunion > $min_samples]-(n)
+        RETURN n, r, m, r2, o
+        LIMIT 50
+        """.format(mw = min_weight, ms = min_samples)
+    else:
+        query = """
+        MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
+        WHERE n.name = $name
+        RETURN n, r, m
+        LIMIT 50
+        """.format(mw = min_weight, ms = min_samples)
     result = driver.run(query, name=name)
     nodes = []
     edges = []
@@ -42,16 +60,28 @@ def fetch_subgraph(driver, name):
                                'name': record['n']['name'] + ' (interacts with) ' + record['m']['name'],
                                'interaction': 'interacts with'
                                }})
+        if all_edges and record.get('r2') and record.get('o'):
+            edges.append({'data': {'source': record['m']['id'], 
+                                   'target': record['o']['id'],
+                                   'weight': record['r2']['weight'],
+                                   'lenunion': record['r2']['lenunion'],
+                                   'union': record['r2']['union'],
+                                   'name': record['m']['name'] + ' (interacts with) ' + record['o']['name'],
+                                   'interaction': 'interacts with'}})
     return nodes, edges
 
 @app.route('/getNodeData', methods=['GET'])
 def get_node_data():
     driver = get_driver()
     node_id = request.args.get('name')
-    print(node_id)
+    min_weight = request.args.get('min_weight')
+    min_samples = request.args.get('min_samples')
+    oncogenes = request.args.get('oncogenes', 'false').lower() == 'true'
+    all_edges = request.args.get('all_edges', 'false').lower() == 'true'
+
     # Create a session and run fetch_subgraph
     with driver.session() as session:
-        nodes, edges = session.execute_read(fetch_subgraph, node_id)
+        nodes, edges = session.execute_read(fetch_subgraph, node_id, min_weight, min_samples, oncogenes, all_edges)
 
         if nodes:
             return jsonify({

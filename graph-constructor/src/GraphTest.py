@@ -14,15 +14,19 @@ def main():
     # paths
     # -----
     # michael
-    small_test_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
-    ccle_path = "/Users/michael/Downloads/amplicon_repo_datasets/ccle_aggregated_results.csv"
-    pcawg_path = "/Users/michael/Downloads/amplicon_repo_datasets/pcawg_aggregated_results.csv"
-    tcga_path = "/Users/michael/Downloads/amplicon_repo_datasets/tcga_aggregated_results.csv"
-    oncogene_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
+    # small_test_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
+    # ccle_path = "/Users/michael/Downloads/amplicon_repo_datasets/ccle_aggregated_results.csv"
+    # pcawg_path = "/Users/michael/Downloads/amplicon_repo_datasets/pcawg_aggregated_results.csv"
+    # tcga_path = "/Users/michael/Downloads/amplicon_repo_datasets/tcga_aggregated_results.csv"
+    # oncogene_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
     # # dhruv
     # small_test_path = "AA_aggregated_results_small_example.csv"
     # # kyra
-    # small_test_path = "/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
+    small_test_path = "/mnt/c/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
+    ccle_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/ccle_aggregated_results.csv"
+    pcawg_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/pcawg_aggregated_results.csv"
+    tcga_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/tcga_aggregated_results.csv"
+    oncogene_path = "/mnt/c/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
 
     # import datasets
     # ---------------
