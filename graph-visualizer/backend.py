@@ -27,10 +27,10 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
     print()
     if all_edges:
         query = """
-        MATCH (n)-[r WHERE r.weight >= 0.1 and r.lenunion >= 1]-(m)
+        MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
         WHERE n.name = $name
-        OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= 0.1 and r2.lenunion >= 1]-(o)
-        MATCH (o)-[r3 WHERE r3.weight >= 0.1 and r3.lenunion >= 1]-(n)
+        OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= {mw} and r2.lenunion >= {ms}]-(o)
+        MATCH (o)-[r3 WHERE r3.weight >= {mw} and r3.lenunion >= {ms}]-(n)
         RETURN n, r, m, r2, o
         LIMIT 50
         """.format(mw = min_weight, ms = min_samples)
