@@ -27,20 +27,29 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
     print()
     if all_edges:
         query = """
-        MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
+        MATCH (n)-[r WHERE r.weight >= 0.1 and r.lenunion >= 1]-(m)
         WHERE n.name = $name
-        OPTIONAL MATCH (m)-[r2 WHERE r2.weight > $min_weight and r2.lenunion > $min_samples]-(o)
-        MATCH (o)-[r3 WHERE r3.weight > $min_weight and r3.lenunion > $min_samples]-(n)
+        OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= 0.1 and r2.lenunion >= 1]-(o)
+        MATCH (o)-[r3 WHERE r3.weight >= 0.1 and r3.lenunion >= 1]-(n)
         RETURN n, r, m, r2, o
         LIMIT 50
         """.format(mw = min_weight, ms = min_samples)
     else:
-        query = """
-        MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
-        WHERE n.name = $name
-        RETURN n, r, m
-        LIMIT 50
-        """.format(mw = min_weight, ms = min_samples)
+        if oncogenes:
+            query = """
+            MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m WHERE m.oncogene = "True")
+            WHERE n.name = $name
+            RETURN n, r, m
+            LIMIT 50
+            """.format(mw = min_weight, ms = min_samples)
+        else:
+            query = """
+            MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
+            WHERE n.name = $name
+            RETURN n, r, m
+            LIMIT 50
+            """.format(mw = min_weight, ms = min_samples)
+    print(query)
     result = driver.run(query, name=name)
     nodes = []
     edges = []
@@ -82,7 +91,7 @@ def get_node_data():
     # Create a session and run fetch_subgraph
     with driver.session() as session:
         nodes, edges = session.execute_read(fetch_subgraph, node_id, min_weight, min_samples, oncogenes, all_edges)
-
+        #print(edges)
         if nodes:
             return jsonify({
                 'nodes': nodes,

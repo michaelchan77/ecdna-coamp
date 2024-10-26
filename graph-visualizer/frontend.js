@@ -31,7 +31,7 @@ async function loadGraph() {
         }
 
         const data = await response.json();
-
+        console.log(data)
         // Initialize Cytoscape with fetched data
         const cy = cytoscape({
             container: document.getElementById('cy'),
