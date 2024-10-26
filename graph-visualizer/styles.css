@@ -95,15 +95,39 @@ button:hover {
     border-radius: 4px; /* Rounded corners */
 }
 
-/* Define the size of the container for Cytoscape */
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1600px;
+}
 #cy {
     margin: auto;
-    width: 90%; /* Slightly wider for better usage */
+    width: 98%; /* Slightly wider for better usage */
     aspect-ratio: 16 / 9;
     background-color: white;
     border: 1px solid #eaeaea; /* Light border for a minimal feel */
     border-radius: 8px; /* Slightly larger radius for elegance */
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     padding: 20px; /* Add some padding inside the container */
-    margin-top: 20px
+    margin-top: 2px;
+    margin-left: 30px
+}
+.data-container {
+    width: 2%; /* Adjust width as needed */
+    padding: 20px;
+    max-height: 400px; 
+    overflow-y: auto;
+    border-left: 4px solid #ccc; /* Optional: for separation */
+}
+table {
+    width: 20%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
 }
