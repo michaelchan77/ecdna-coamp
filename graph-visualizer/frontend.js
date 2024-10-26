@@ -45,13 +45,35 @@ async function loadGraph() {
             layout: { name: 'fcose' }
         });
 
-        // Update sample slider max
-        updateSampleMax(cy);
+        //Initialize Gene Data Column with fetched data
+        const datacontainer = document.getElementById('data-container');
+        datacontainer.innerHTML = ''; // Clear previous rows
 
-        // cy.nodes().forEach(node => {
+        cy.nodes().forEach(node => {
+            row = document.createElement('tr');
+    
+            const cellName = document.createElement('td');
+            const geneName = node.data('name'); // Get the gene name
+            const link = document.createElement('a');
+            
+            // Set the href attribute to the desired URL (customize this URL as needed)
+            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`; // Replace with your actual URL
+            link.textContent = geneName; // Set the text to the gene name
+            link.target = '_blank'; // Open the link in a new tab (optional)
 
-        // });
+            cellName.appendChild(link);
+    
+            cellStatus = document.createElement('td');
+            cellStatus.textContent = node.data('oncogene'); // Adjust based on your data structure
+    
+            row.appendChild(cellName);
+            row.appendChild(cellStatus);
+            datacontainer.appendChild(row);
+        });
 
+        cy.nodes().forEach(node => {
+
+        });
         // // Store reference to current subset
         // let currentSubset = cy
 
@@ -109,20 +131,6 @@ async function loadGraph() {
 
     } catch (error) {
         alert(error.message);
-    }
-}
-
-function updateSampleMax(cy) {
-    if (cy) {
-        maxSamples = 1;
-        cy.edges().forEach(edge => {
-            const samples = edge.data('lenunion');
-            if (samples > maxSamples) {
-                maxSamples = samples;
-            }
-        });
-        document.getElementById('numSamples').max = maxSamples;
-        document.getElementById('sampleMaxText').textContent = maxSamples;
     }
 }
 
