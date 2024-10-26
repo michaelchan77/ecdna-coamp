@@ -45,9 +45,13 @@ async function loadGraph() {
             layout: { name: 'fcose' }
         });
 
-        cy.nodes().forEach(node => {
+        // Update sample slider max
+        updateSampleMax(cy);
 
-        });
+        // cy.nodes().forEach(node => {
+
+        // });
+
         // // Store reference to current subset
         // let currentSubset = cy
 
@@ -105,6 +109,20 @@ async function loadGraph() {
 
     } catch (error) {
         alert(error.message);
+    }
+}
+
+function updateSampleMax(cy) {
+    if (cy) {
+        maxSamples = 1;
+        cy.edges().forEach(edge => {
+            const samples = edge.data('lenunion');
+            if (samples > maxSamples) {
+                maxSamples = samples;
+            }
+        });
+        document.getElementById('numSamples').max = maxSamples;
+        document.getElementById('sampleMaxText').textContent = maxSamples;
     }
 }
 
