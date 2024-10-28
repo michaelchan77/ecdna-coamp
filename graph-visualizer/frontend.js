@@ -1,8 +1,10 @@
-document.addEventListener('DOMContentLoaded', function () {
-    cytoscape.use(cytoscapePopper(tippyFactory));
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     cytoscape.use(cytoscapePopper(tippyFactory));
+// });
 
 async function loadGraph() {
+    cytoscape.use(cytoscapePopper(tippyFactory));
+
     // input gene
     const inputNode = $('#textBox').val().trim().toUpperCase();
 
@@ -47,6 +49,18 @@ async function loadGraph() {
 
         // Update sample slider max
         updateSampleMax(cy);
+
+        // Make test tip for input node
+        var a = cy.nodes(`[label == ${inputNode}]`);
+        var makeContent = function(text) {
+            var div = document.createElement('div');
+            div.innerHTML = text;
+            return div;
+        };
+        var tippyA = a.popper({
+            content: makeContent('foo'),
+        });
+        tippyA.show();
 
         // cy.nodes().forEach(node => {
 
