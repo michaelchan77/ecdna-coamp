@@ -27,9 +27,7 @@
         <button id="storeButton">→</button>
         <p id="storedText"></p>
     </div>
-    <!-- container for cytoscape graph -->
-    <div id="cy"></div>
-
+    
     <div class="settings">
         <!-- edge slider -->
         <div class="edge-slider">
@@ -49,7 +47,7 @@
             <div class="slider-info">
                 <div class="value-left">1</div>
                 <input type="range" id="numSamples" class="slider" min="1" max="10" step="1" value="1">
-                <div class="value-right" id="sampleMaxText">10</div>
+                <div class="value-right">10</div>
             </div>
         </div>
         <!-- oncogene button -->
@@ -66,6 +64,20 @@
         <div class="edge-slider">
             <button id="filterButton">Filter</button>
         </div>
+    </div>
+
+    <!-- container for cytoscape graph -->
+    <div class="container">
+        <div id="cy"></div>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Gene</th>
+                    <th>Oncogene Status</th>
+                </tr>
+            </thead>
+            <tbody id="data-container"></tbody>
+        </table>
     </div>
 
     <!-- Initialize Cytoscape.js -->
