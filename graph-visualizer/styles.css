@@ -131,3 +131,11 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
+
+.tippy-box[data-theme~='edge'] {
+    background-color: rgba(0, 0, 0, 0.7);
+    /* background-color: #ffd500; */
+  }
+.tippy-box[data-theme~='node'] {
+    background-color: rgba(0, 0, 0, 0.7);
+}
