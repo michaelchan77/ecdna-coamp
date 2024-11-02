@@ -102,7 +102,7 @@ button:hover {
 }
 #cy {
     margin: auto;
-    width: 98%; /* Slightly wider for better usage */
+    width: 80%; /* Slightly wider for better usage */
     aspect-ratio: 16 / 9;
     background-color: white;
     border: 1px solid #eaeaea; /* Light border for a minimal feel */
@@ -115,27 +115,47 @@ button:hover {
 .data-container {
     width: 2%; /* Adjust width as needed */
     padding: 20px;
-    max-height: 400px; 
-    overflow-y: auto;
     border-left: 4px solid #ccc; /* Optional: for separation */
 }
-table {
-    width: 20%;
-    border-collapse: collapse;
-}
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
+.table-wrapper {
+    max-height: 627px;
+    min-width: 240px;
+    max-width: 240px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden;
+    margin-left: 10px;
+    margin-right: 20px; /* More space on the right */
 }
 
-.tippy-box[data-theme~='edge'] {
-    background-color: rgba(0, 0, 0, 0.7);
-    /* background-color: #ffd500; */
-  }
-.tippy-box[data-theme~='node'] {
-    background-color: rgba(0, 0, 0, 0.7);
+table {
+    border-collapse: collapse;
+    border: 2px solid #e0e0e0; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Soft shadow under the table */
+}
+
+th, td {
+    border: 2px solid #e0e0e0; /* Softer border color */
+    padding: 12px; /* Increased padding for comfort */
+    text-align: left;
+    transition: background-color 0.3s; /* Smooth transition for hover effects */
+}
+
+th {
+    border: 2px solid #e0e0e0;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top */
+    z-index: 1; /* Ensure it stays on top of other content */
+    background-color: #ffffff; /* Slightly lighter shade for header */
+    font-weight: bold; /* Emphasize header */
+    border-bottom: 2px solid #e0e0e0;
+}
+
+tr:hover td {
+    background-color: #e2e2e4; /* Highlight rows on hover */
+}
+
+.no-data {
+    height: 50px; /* Ensure this row takes up space */
+    text-align: center; /* Center the message */
+    color: #888; /* Lighter text color for a placeholder feel */
 }
