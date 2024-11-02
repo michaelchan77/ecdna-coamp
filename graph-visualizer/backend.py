@@ -66,7 +66,7 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
                                'weight': record['r']['weight'],
                                'lenunion': record['r']['lenunion'],
                                'union': record['r']['union'],
-                               'name': record['n']['name'] + ' (interacts with) ' + record['m']['name'],
+                               'name': record['n']['name'] + ' -- ' + record['m']['name'],
                                'interaction': 'interacts with'
                                }})
         if all_edges and record.get('r2') and record.get('o'):
@@ -75,7 +75,7 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
                                    'weight': record['r2']['weight'],
                                    'lenunion': record['r2']['lenunion'],
                                    'union': record['r2']['union'],
-                                   'name': record['m']['name'] + ' (interacts with) ' + record['o']['name'],
+                                   'name': record['m']['name'] + ' -- ' + record['o']['name'],
                                    'interaction': 'interacts with'}})
     return nodes, edges
 
