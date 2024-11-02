@@ -17,7 +17,7 @@ function tippyFactory(ref, content, theme){
  
         // if interactive:
         interactive: true,
-        appendTo: document.body // or append dummyDomEle to document.body
+        appendTo: document.body
     } );
  
     return tip;
@@ -64,11 +64,11 @@ async function loadGraph() {
             container: document.getElementById('cy'),
             elements: data,  // Use the data from the server
             style: [
-                { selector: 'node', style: { 'background-color': '#A7C6ED', 'label': 'data(name)' } },
-                // { selector: `node[name="${inputNode}"]`, style: { 'background-color': '#A7C6ED', 'label': 'data(name)', 'border-width': 2, 'border-color': 'black', 'border-style': 'solid' } },
-                { selector: `node[oncogene="True"]`, style: { 'background-color': '#e04347', 'label': 'data(name)' } },
+                { selector: 'node', style: { 'background-color': '#A7C6ED', 'label': '' } },
+                { selector: `node[name="${inputNode}"], node.highlighted`, style: {'z-index': 100, 'label': 'data(name)' } }, //, 'border-width': 2, 'border-color': 'black', 'border-style': 'solid' } },
+                { selector: `node[oncogene="True"]`, style: { 'background-color': '#ff4757', 'z-index': 10, 'label': 'data(name)' } },
                 { selector: 'edge', style: { 'width': 2, 'line-color': '#ccc' } },
-                { selector: '.highlighted', style: {'background-color': '#ffd500', 'line-color': '#ffd500' } }
+                { selector: '.highlighted', style: {'z-index': 100, 'background-color': '#ffd500', 'line-color': '#ffd500' } }
             ]
         });
 
@@ -109,62 +109,7 @@ async function loadGraph() {
             datacontainer.appendChild(row);
         });
 
-        // // Store reference to current subset
-        // let currentSubset = cy
-
-        // document.getElementById('edgeWeight').addEventListener('change', updateVisibleElements);
-        // document.getElementById('numSamples').addEventListener('change', updateVisibleElements);
-
-        // // Function to update visible elements based on sliders
-        // function updateVisibleElements() {
-        //     if (currentSubset.length === 0) return; // Do nothing if no subset is selected
-
-        //     let sliderValue = parseFloat($('#edgeWeight').val());
-        //     let sampleVal = parseInt($('#numSamples').val());
-
-        //     // Show all edges within subset
-        //     currentSubset.show();
-
-        //     // Hide edges with weight < slider value
-        //     currentSubset.edges().forEach(edge => {
-        //         const weight = edge.data('weight');
-        //         const numSamples = edge.data('total_samples');
-
-        //         if (weight < sliderValue || numSamples < sampleVal) {
-        //             edge.hide();
-        //             edge.connectedNodes().hide(); // Hide connected nodes
-        //         }
-        //     });
-
-        //     // Fit the viewport to the remaining visible elements
-        //     cy.fit(currentSubset);
-        // }
-
-        // // Checkbox handler for oncogenes
-        // let nonOncogenesSubset = null;
-
-        // document.getElementById('oncogenes_only').addEventListener('change', toggleOncogenes);
-
-        // function toggleOncogenes(event) {
-        //     const isChecked = event.target.checked;
-
-        //     if (isChecked) {
-        //         currentSubset.nodes().forEach(node => {
-        //             const oncogene_status = node.data('oncogene_status');
-    
-        //             if (!oncogene_status) {
-        //                 node.hide();
-        //                 node.connectEdges().hide(); // Hide connected nodes
-        //             }
-        //         });
-        //         cy.fit(currentSubset);
-        //     }
-        //     else {
-        //         currentSubset.fit();
-        //     }
-        // }
-
-        // animate selected elements
+        // Enlarge elements on tap
         cy.on('tap', 'edge', (event) => {
             const edge = event.target;
             const width = Number(edge.style('width').replace('px',''));
@@ -195,7 +140,7 @@ async function loadGraph() {
     }
 }
 
-// Function to set tooltip content using data from Cytoscape elements
+// Set tooltip content
 function createTooltipContent(ele) {
     let content = '';
     if (ele.isNode()) {
@@ -208,7 +153,7 @@ function createTooltipContent(ele) {
     else {
         let template = document.getElementById('edge-template');
         template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
-        template.querySelector('#etip-weight').textContent = ele.data('weight') || 'N/A';
+        template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
         template.querySelector('#etip-nsamples').textContent = ele.data('lenunion') || 'N/A';
         template.querySelector('#etip-samples').textContent = ele.data('union').join(', ') || 'N/A';
         content = template.innerHTML;
@@ -273,38 +218,6 @@ function layout(cy, input) {
         animate: true,
         animationDuration: 700
       }).run();
-}
-
-// Change the size and transparency of nodes based on their distance from the center node
-function outdatedLayout(cy, input) {
-    if (!cy) { return }
-    const center = cy.nodes(`[name = "${input}"]`);
-    let calcDist = function(n, c) {
-        const dx = n.position().x - c.position().x;
-        const dy = n.position().y - c.position().y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-    cy.nodes().forEach(node => {
-        // Euclidean distance
-        distance = calcDist(node, center);
-
-        // Normalize the distance (e.g., divide by max distance for scaling)
-        let init = 0;
-        const maxDistance = cy.nodes().reduce((max, n) => {
-            return Math.max(max, calcDist(n, center));
-        }, init);
-        const normalizedDistance = distance / maxDistance;
-
-        // Adjust node properties based on normalized distance
-        const size = 40 * (1 - normalizedDistance) + 10;
-        const transparency = 0.5 + (1 - normalizedDistance) * 0.5;
-
-        node.style({
-            'width': size,
-            'height': size,
-            'background-opacity': transparency
-        });
-    });
 }
 
 function updateSampleMax(cy) {
