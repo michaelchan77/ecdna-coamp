@@ -69,6 +69,7 @@
     <!-- container for cytoscape graph -->
     <div class="container">
         <div id="cy"></div>
+        <div class="table-wrapper">
         <table id="data-table">
             <thead>
                 <tr>
@@ -76,8 +77,13 @@
                     <th>Oncogene Status</th>
                 </tr>
             </thead>
-            <tbody id="data-container"></tbody>
+            <tbody id="data-container">
+                <tr class="no-data">
+                    <td colspan="3">No data available</td>
+                </tr>
+            </tbody>
         </table>
+        </div>
     </div>
     
     <!-- Hidden tooltip templates -->
