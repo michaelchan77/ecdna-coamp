@@ -1,6 +1,6 @@
 class Node:
 
-	def __init__(self, ident, label, oncogene, locs=list()): # Kyra
+	def __init__(self, ident, label, oncogene, alias, locs=list()): # Kyra
 		"""
 		Parameters:
 			self (Node) : Node object 
@@ -14,7 +14,17 @@ class Node:
 		self.label = label
 		self.oncogene = oncogene
 		self.locs = locs
+		self.alias = alias
 	
+	def GetAlias(self):
+		"""
+		Parameters: 
+			self (Node) : Node object 
+		Return: 
+			alias : gene alias
+		"""
+		return self.alias
+
 	def GetID(self):
 		"""
 		Parameters: 

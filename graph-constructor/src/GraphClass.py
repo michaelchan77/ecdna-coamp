@@ -7,7 +7,7 @@ from NodeClass import Node
 class Graph:
 
 
-	def __init__(self, dataset=None, oncogene_list=None, amp_type="ecDNA", loc_type="feature", threshold=0): # Michael
+	def __init__(self, dataset=None, oncogene_list=None, names=None, amp_type="ecDNA", loc_type="feature", threshold=0): # Michael
 		"""
 		Parameters:
 			self (Graph) : Graph object 
@@ -27,7 +27,7 @@ class Graph:
 		if dataset is None:
 			print("Read in Graph")	
 		else:
-			self.BuildGraph(dataset, oncogene_list)
+			self.BuildGraph(dataset, oncogene_list, names)
 
 	def SetThreshold(self, num):
 		self.threshold = num
@@ -43,7 +43,7 @@ class Graph:
 		genelist = re.findall(pattern, input)
 		return genelist
 
-	def BuildGraph(self, dataset, oncogene_list): # Dhruv
+	def BuildGraph(self, dataset, oncogene_list, names): # Dhruv
 		"""
 		Build a frequency graph based on a given dataset (AA agg results)
 	
@@ -76,7 +76,8 @@ class Graph:
 				if found_node == False:
 					id += 1
 					oncogene = gene in oncogene_list
-					node = Node(id, gene, oncogene, [current_sample])
+					alias = names[gene]
+					node = Node(id, gene, oncogene, alias, [current_sample])
 					self.nodelist.append(node)
 
 		for node1 in self.nodelist:
@@ -239,9 +240,9 @@ class Graph:
 		if nodefile is not None:
 			with open(nodefile, 'wt') as f:
 				writer = csv.writer(f) #, delimiter='\t')
-				writer.writerow(['id', 'label', 'oncogene_status'])
+				writer.writerow(['id', 'label', 'oncogene_status', 'alias'])
 				for node in self.nodelist:
-					writer.writerow([node.GetID(), node.GetLabel(), node.GetOncogeneStatus()])				
+					writer.writerow([node.GetID(), node.GetLabel(), node.GetOncogeneStatus(), node.GetAlias()])				
 	
 	def Read(self, table): # Dhruv
 		"""
