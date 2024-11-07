@@ -95,17 +95,22 @@ async function loadGraph() {
             const link = document.createElement('a');
             
             // Set the href attribute to the desired URL (customize this URL as needed)
-            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`; // Replace with your actual URL
+            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`; // Replace with actual URL
             link.textContent = geneName; // Set the text to the gene name
             link.target = '_blank'; // Open the link in a new tab (optional)
 
             cellName.appendChild(link);
     
             cellStatus = document.createElement('td');
-            cellStatus.textContent = node.data('oncogene'); // Adjust based on your data structure
+            cellStatus.textContent = node.data('oncogene');
     
+            cellWeight = document.createElement('td');
+            edges = node.edgesWith(cy.$(nodeDict[inputNode]));
+            cellWeight.textContent = String(edges[0]?.data('weight').toFixed(3) ?? 0);
+
             row.appendChild(cellName);
             row.appendChild(cellStatus);
+            row.appendChild(cellWeight);
             datacontainer.appendChild(row);
         });
 
@@ -233,3 +238,8 @@ function updateSampleMax(cy) {
         document.getElementById('sampleMaxText').textContent = maxSamples;
     }
 }
+
+// const cyContainer = document.getElementById('cy');
+// cyContainer.addEventListener('mouseup', () => {
+//     cy.resize();
+// });

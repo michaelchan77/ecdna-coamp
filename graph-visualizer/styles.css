@@ -99,11 +99,13 @@ button:hover {
     display: flex;
     width: 100%;
     max-width: 1600px;
+    align-items: stretch; /* Ensures both children stretch to the same height */
+    height: 50%;
 }
 #cy {
     margin: auto;
     width: 80%; /* Slightly wider for better usage */
-    aspect-ratio: 16 / 9;
+    /* aspect-ratio: 16 / 9; */
     background-color: white;
     border: 1px solid #eaeaea; /* Light border for a minimal feel */
     border-radius: 8px; /* Slightly larger radius for elegance */
@@ -112,17 +114,24 @@ button:hover {
     margin-top: 2px;
     margin-left: 30px
  }
+ .cy-container {
+    width: 100%;
+    height: 500px;        /* Initial height */
+    resize: both;         /* Allows resizing both horizontally and vertically */
+    overflow: auto;       /* Show scrollbars if content overflows */
+    border: 1px solid #ccc; /* Optional: border for visibility */
+  }
  .data-container {
     width: 2%; /* Adjust width as needed */
     padding: 20px;
     border-left: 4px solid #ccc; /* Optional: for separation */
  }
  .table-wrapper {
-    max-height: 627px;
-    min-width: 240px;
-    max-width: 240px;
+    max-height: 500px;
+    /* max-height: 627px; */
+    /* min-width: 240px; */
     overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden;
+    overflow-x: auto;
     margin-left: 10px;
     margin-right: 20px; /* More space on the right */
  }
