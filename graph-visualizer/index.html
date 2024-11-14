@@ -31,7 +31,7 @@
     <div class="settings">
         <!-- edge slider -->
         <div class="edge-slider">
-            Edge weight minimum: 
+            Coamplification frequency minimum: 
             <span id="sliderValue">0.1</span>
             <div class="slider-info">
                 <div class="value-left">0.1</div>
@@ -75,7 +75,7 @@
                 <tr>
                     <th>Gene</th>
                     <th>Oncogene</th>
-                    <th>Edgeweight</th>
+                    <th onclick="sortTable(2)">Coamplification Frequency</th>
                 </tr>
             </thead>
             <tbody id="data-container">
@@ -95,7 +95,8 @@
     </div>
     <div id="edge-template" style="display: none;">
         <strong>Relationship:</strong> <span id="etip-name"></span><br>
-        <strong>Edgeweight:</strong> <span id="etip-weight"></span><br>
+        <strong>Coamplification frequency:</strong> <span id="etip-weight"></span><br>
+        <strong>Coamplification fraction:</strong> <span id="etip-frac"></span><br>
         <strong>Coamplified in:</strong> <span id="etip-nsamples"></span> samples<br>
         <strong>Samples:</strong> <span id="etip-samples"></span>
     </div>

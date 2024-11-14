@@ -73,9 +73,13 @@ async function loadGraph() {
         });
 
         // Dictionary to access node ids by name
-        let nodeDict = [];
-        cy.nodes().forEach(node => nodeDict.push( {key: node.data('name'), value: node.id()} ));
-        console.log('number nodes: '+nodeDict.length);
+        let nodeID = {};
+        cy.nodes().forEach(node => {
+            nodeID[node.data('name')] = "#"+node.id();
+        });
+        console.log('Number of nodes:', Object.keys(nodeID).length);
+        console.log(nodeID[inputNode] + ': ' + cy.$(nodeID[inputNode]).data('name'));
+        
         // Update sample slider max
         updateSampleMax(cy);
         //styleNodes(cy, inputNode);
@@ -105,16 +109,23 @@ async function loadGraph() {
             cellStatus.textContent = node.data('oncogene');
     
             cellWeight = document.createElement('td');
-            edges = node.edgesWith(cy.$(nodeDict[inputNode]));
-            cellWeight.textContent = String(edges[0]?.data('weight').toFixed(3) ?? 0);
-
+            edges = node.edgesWith(cy.$(nodeID[inputNode]));
+            cellWeight.textContent = String(edges[0]?.data('weight').toFixed(3) ?? 'N/A');
+            
             row.appendChild(cellName);
             row.appendChild(cellStatus);
             row.appendChild(cellWeight);
             datacontainer.appendChild(row);
+
+            // Add click event to each row
+            row.addEventListener('click', () => {
+                const nodeName = cellName.textContent; // Assuming cellName text contains node ID
+                const node = cy.$(nodeID[nodeName]);
+                node.emit('tap');
+            });
         });
 
-        // Enlarge elements on tap
+        // Resize elements on tap
         cy.on('tap', 'edge', (event) => {
             const edge = event.target;
             const width = Number(edge.style('width').replace('px',''));
@@ -152,13 +163,14 @@ function createTooltipContent(ele) {
         let template = document.getElementById('node-template');
         template.querySelector('#ntip-name').textContent = ele.data('name') || 'N/A';
         template.querySelector('#ntip-oncogene').textContent = ele.data('oncogene') || 'N/A';
-        template.querySelector('#ntip-nsamples').textContent = '?';// ele.data('lenunion') || 'N/A';
+        template.querySelector('#ntip-nsamples').textContent = ele.data('samples').length || 'N/A';
         content = template.innerHTML;
     }
     else {
         let template = document.getElementById('edge-template');
         template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
         template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
+        template.querySelector('#etip-frac').textContent = ele.data('leninter') + '/' + ele.data('lenunion');
         template.querySelector('#etip-nsamples').textContent = ele.data('lenunion') || 'N/A';
         template.querySelector('#etip-samples').textContent = ele.data('union').join(', ') || 'N/A';
         content = template.innerHTML;
@@ -237,6 +249,37 @@ function updateSampleMax(cy) {
         document.getElementById('numSamples').max = maxSamples;
         document.getElementById('sampleMaxText').textContent = maxSamples;
     }
+}
+
+// Function to sort the table when clicking on column headers
+function sortTable(columnIndex) {
+    const table = document.getElementById('data-table');
+    const tbody = document.getElementById('data-container');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const noDataRow = tbody.querySelector('.no-data');
+    // Remove the "No data available" row temporarily if present
+    if (noDataRow) rows.splice(rows.indexOf(noDataRow), 1);
+    // Toggle sort order
+    let sortOrder = table.dataset.sortOrder === 'asc' ? 'desc' : 'asc';
+    table.dataset.sortOrder = sortOrder;
+    // Sort rows based on the content of the selected column
+    rows.sort((a, b) => {
+        const cellA = a.children[columnIndex].innerText.trim();
+        const cellB = b.children[columnIndex].innerText.trim();
+        if (!isNaN(cellA) && !isNaN(cellB)) {
+            // Numeric sort
+            return sortOrder === 'asc' ? cellA - cellB : cellB - cellA;
+        } else {
+            // Text sort
+            return sortOrder === 'asc'
+                ? cellA.localeCompare(cellB)
+                : cellB.localeCompare(cellA);
+        }
+    });
+    // Re-add sorted rows to the tbody
+    rows.forEach(row => tbody.appendChild(row));
+    // Re-add the "No data available" row if needed
+    if (noDataRow && rows.length === 0) tbody.appendChild(noDataRow);
 }
 
 // const cyContainer = document.getElementById('cy');

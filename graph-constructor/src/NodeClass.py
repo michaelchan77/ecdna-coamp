@@ -23,6 +23,7 @@ class Node:
 		Return: 
 			alias : gene alias
 		"""
+		return '' # temp
 		return self.alias
 
 	def GetID(self):
