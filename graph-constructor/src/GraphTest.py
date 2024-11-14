@@ -38,11 +38,13 @@ def main():
     aggregated = pd.concat([ccle, pcawg, tcga])
     with open (oncogene_path) as f:
         oncogenes = f.read().splitlines()
-    aliasdf = pd.read_csv(gene_alias_path)
-    # of form [REFSEQCOL][DEPMAPALIASCOL]
-    alias_dict = pd.Series(aliasdf.DEPMAPALIASCOL.values,index=aliasdf.REFSEQCOL).to_dict()
-    for k,v in alias_dict.items():
-        print(k, v)
+
+    # # uncomment when gene linker made
+    # aliasdf = pd.read_csv(gene_alias_path)
+    # # of form [REFSEQCOL][DEPMAPALIASCOL]
+    # alias_dict = pd.Series(aliasdf.DEPMAPALIASCOL.values,index=aliasdf.REFSEQCOL).to_dict()
+    # for k,v in alias_dict.items():
+    #     print(k, v)
 
     # build, print, export graph for small dataset
     # -----------
@@ -73,7 +75,7 @@ def main():
     if 1:
         print("CCLE GRAPH")
         print("-----------")
-        graph = Graph(ccle, oncogene_list=oncogenes, names=alias_dict)
+        graph = Graph(ccle, oncogene_list=oncogenes)#, names=alias_dict)
         # print("Nodes:", graph.NumNodes(), " Edges:", graph.NumEdges())
         # Nodes: 3320  Edges: 118033
         graph.Export("neo4j_ccle_edges.csv", "neo4j_ccle_nodes.csv")
