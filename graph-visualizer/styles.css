@@ -99,11 +99,13 @@ button:hover {
     display: flex;
     width: 100%;
     max-width: 1600px;
+    align-items: stretch; /* Ensures both children stretch to the same height */
+    height: 50%;
 }
 #cy {
     margin: auto;
     width: 80%; /* Slightly wider for better usage */
-    aspect-ratio: 16 / 9;
+    /* aspect-ratio: 16 / 9; */
     background-color: white;
     border: 1px solid #eaeaea; /* Light border for a minimal feel */
     border-radius: 8px; /* Slightly larger radius for elegance */
@@ -111,36 +113,46 @@ button:hover {
     padding: 20px; /* Add some padding inside the container */
     margin-top: 2px;
     margin-left: 30px
-}
-.data-container {
+ }
+ .cy-container {
+    width: 100%;
+    height: 500px;        /* Initial height */
+    resize: both;         /* Allows resizing both horizontally and vertically */
+    overflow: auto;       /* Show scrollbars if content overflows */
+    border: 1px solid #ccc; /* Optional: border for visibility */
+  }
+ .data-container {
     width: 2%; /* Adjust width as needed */
     padding: 20px;
     border-left: 4px solid #ccc; /* Optional: for separation */
-}
-.table-wrapper {
-    max-height: 627px;
-    min-width: 240px;
-    max-width: 240px;
+ }
+ .table-wrapper {
+    max-height: 500px;
+    min-width: 350px;
+    max-width: 450px;
     overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden;
+    overflow-x: auto;
     margin-left: 10px;
     margin-right: 20px; /* More space on the right */
-}
-
-table {
+ }
+ 
+ 
+ table {
     border-collapse: collapse;
-    border: 2px solid #e0e0e0; 
+    border: 2px solid #e0e0e0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Soft shadow under the table */
-}
-
-th, td {
+ }
+ 
+ 
+ th, td {
     border: 2px solid #e0e0e0; /* Softer border color */
     padding: 12px; /* Increased padding for comfort */
     text-align: left;
     transition: background-color 0.3s; /* Smooth transition for hover effects */
-}
-
-th {
+ }
+ 
+ 
+ th {
     border: 2px solid #e0e0e0;
     position: sticky; /* Makes the header sticky */
     top: 0; /* Sticks to the top */
@@ -148,14 +160,24 @@ th {
     background-color: #ffffff; /* Slightly lighter shade for header */
     font-weight: bold; /* Emphasize header */
     border-bottom: 2px solid #e0e0e0;
-}
-
-tr:hover td {
+ }
+ 
+ 
+ tr:hover td {
     background-color: #e2e2e4; /* Highlight rows on hover */
-}
-
-.no-data {
+ }
+ 
+ 
+ .no-data {
     height: 50px; /* Ensure this row takes up space */
     text-align: center; /* Center the message */
     color: #888; /* Lighter text color for a placeholder feel */
+ }
+ 
+.tippy-box[data-theme~='edge'] {
+    background-color: rgba(0, 0, 0, 0.7);
+    /* background-color: #ffd500; */
+  }
+.tippy-box[data-theme~='node'] {
+    background-color: rgba(0, 0, 0, 0.7);
 }

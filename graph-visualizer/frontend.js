@@ -21,7 +21,44 @@ function tippyFactory(ref, content, theme){
     } );
  
     return tip;
- }
+}
+
+// Function to sort the table when clicking on column headers
+function sortTable(columnIndex) {
+    const table = document.getElementById('data-table');
+    const tbody = document.getElementById('data-container');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const noDataRow = tbody.querySelector('.no-data');
+
+    // Remove the "No data available" row temporarily if present
+    if (noDataRow) rows.splice(rows.indexOf(noDataRow), 1);
+
+    // Toggle sort order
+    let sortOrder = table.dataset.sortOrder === 'asc' ? 'desc' : 'asc';
+    table.dataset.sortOrder = sortOrder;
+
+    // Sort rows based on the content of the selected column
+    rows.sort((a, b) => {
+        const cellA = a.children[columnIndex].innerText.trim();
+        const cellB = b.children[columnIndex].innerText.trim();
+
+        if (!isNaN(cellA) && !isNaN(cellB)) {
+            // Numeric sort
+            return sortOrder === 'asc' ? cellA - cellB : cellB - cellA;
+        } else {
+            // Text sort
+            return sortOrder === 'asc'
+                ? cellA.localeCompare(cellB)
+                : cellB.localeCompare(cellA);
+        }
+    });
+
+    // Re-add sorted rows to the tbody
+    rows.forEach(row => tbody.appendChild(row));
+
+    // Re-add the "No data available" row if needed
+    if (noDataRow && rows.length === 0) tbody.appendChild(noDataRow);
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     cytoscape.use( cytoscapePopper(tippyFactory) );
@@ -95,17 +132,22 @@ async function loadGraph() {
             const link = document.createElement('a');
             
             // Set the href attribute to the desired URL (customize this URL as needed)
-            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`; // Replace with your actual URL
+            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`; // Replace with actual URL
             link.textContent = geneName; // Set the text to the gene name
             link.target = '_blank'; // Open the link in a new tab (optional)
 
             cellName.appendChild(link);
     
             cellStatus = document.createElement('td');
-            cellStatus.textContent = node.data('oncogene'); // Adjust based on your data structure
+            cellStatus.textContent = node.data('oncogene');
     
+            cellWeight = document.createElement('td');
+            edges = node.edgesWith(cy.$(nodeDict[inputNode]));
+            cellWeight.textContent = String(edges[0]?.data('weight').toFixed(3) ?? 0);
+
             row.appendChild(cellName);
             row.appendChild(cellStatus);
+            row.appendChild(cellWeight);
             datacontainer.appendChild(row);
         });
 
@@ -233,3 +275,8 @@ function updateSampleMax(cy) {
         document.getElementById('sampleMaxText').textContent = maxSamples;
     }
 }
+
+// const cyContainer = document.getElementById('cy');
+// cyContainer.addEventListener('mouseup', () => {
+//     cy.resize();
+// });
