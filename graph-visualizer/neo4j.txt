@@ -31,3 +31,14 @@ WHERE r2.weight >= 0.8
 MATCH (o)-[r3]-(n)
 WHERE r3.weight >= 0.8
 RETURN n, r, m, r2, o
+
+
+LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_nodes.csv' AS row
+CREATE (n:Node { id: toInteger(row.id)-1, name: row.label, oncogene: row.oncogene_status, samples: split(row.samples, '|')});
+
+CREATE INDEX FOR (n:Node) ON (n.id);
+
+LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
+MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
+MERGE (a)-[:COAMP {weight: toFloat(row.weight), lenunion: toInteger(row.lenunion), union: split(row.union, '|'),
+leninter: toInteger(row.leninter), inter: split(row.inter, '|')}]->(b);

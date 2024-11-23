@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
     cytoscape.use( cytoscapePopper(tippyFactory) );
 });
 
+// Dictionary to access node ids by name
+let nodeID = {};
+
 async function loadGraph() {
     console.log("Load graph pressed");
 
@@ -73,7 +76,7 @@ async function loadGraph() {
         });
 
         // Dictionary to access node ids by name
-        let nodeID = {};
+        nodeID = {};
         cy.nodes().forEach(node => {
             nodeID[node.data('name')] = "#"+node.id();
         });
@@ -128,27 +131,28 @@ async function loadGraph() {
         // Resize elements on tap
         cy.on('tap', 'edge', (event) => {
             const edge = event.target;
-            const width = Number(edge.style('width').replace('px',''));
-            const scale = 3;
-            const newWidth = edge.hasClass('highlighted') ? width*scale : width/scale;
+            const width = edge.data('width');
+            const newWidth = edge.hasClass('highlighted') ? width+2 : width-2;
             edge.animate({
                 style: { 'width': newWidth } // Increase edge width
                 }, {
                 duration: 300,       // Duration in ms
                 easing: 'ease-in-out'
             });
+            edge.data('width', newWidth);
         });
         cy.on('tap', 'node', (event) => {
             const node = event.target;
             const size = node.data('size');
-            const scale = 1.3;
-            const newSize = node.hasClass('highlighted') ? size*scale : size/scale;
+            const scale = 5;
+            const newSize = node.hasClass('highlighted') ? size+scale : size-scale;
             node.animate({
                 style: { 'width': newSize, 'height': newSize } // Increase size
                 }, {
                 duration: 300,       // Duration in ms
                 easing: 'ease-in-out'
             });
+            node.data('size', newSize);
         });
 
     } catch (error) {
@@ -202,39 +206,44 @@ function makeTips(cy) {
 
 function layout(cy, input) {
     if (!cy) { return }
-    const radius = 40;
-    // const center = cy.nodes(`[name = "${input}"]`);
+    const center = cy.$(nodeID[input]);
+    // size nodes
+    // scale center node relative to number of samples
+    const radius = 20 + center.data('samples').length * 3;
     cy.nodes().forEach(node => {
-        if (node.data('name') === input) {
-            const size = radius*(1.5);
-            node.style({ 'width': size, 'height': size });
-            node.data('size', size);
+        // scale other nodes relative to center node
+        const scale = node.data('samples').length / center.data('samples').length;
+        const size = scale * radius;
+        node.style({ 'width': size, 'height': size });
+        node.data('size', size);
+    });
+    // size edges
+    cy.edges().forEach(edge => {
+        // bucket by edgeweight
+        let width = 0.5;
+        if (edge.connectedNodes().contains(center)) {
+            width = edge.data('weight') * 7.7;
         }
-        else {
-            const edges = node.edgesWith(cy.nodes(`[name = "${input}"]`));
-            const scale = edges.reduce((sum, edge) => sum + edge.data('weight'), 0);
-            const size = radius*(scale);
-            node.style({ 'width': size, 'height': size });
-            node.data('size', size);
-        }
+        edge.style({ 'width': width });
+        edge.data('width', width);
     });
     cy.layout({
         name: 'fcose',
-        gravity: 1.5,               // Higher gravity pulls larger nodes more centrally
-        gravityRange: 1.0,          // Smaller range keeps nodes closer to center
+        gravity: 0.3,               // Lower gravity to reduce pull toward center
+        gravityRange: 3.0,          // Increase range to allow for more spread-out nodes
         idealEdgeLength: (edge) => {
-          // Larger nodes = edge length, closer to the center
-          const sourceSize = edge.source().data('size');
-          const targetSize = edge.target().data('size');
-          return 100 - 1.5*Math.min(sourceSize, targetSize);
+            // Increase edge length to space nodes further apart
+            const sourceSize = edge.source().data('size');
+            const targetSize = edge.target().data('size');
+            return 150 - 2 * Math.min(sourceSize, targetSize);  // Increase base length
         },
         nodeRepulsion: (node) => {
-          // Larger nodes have lower repulsion to stay closer
-          return 4500 - 100*node.data('size');
+            // Increase repulsion across the board to increase spacing
+            return 8000 - 200 * node.data('size');  // Larger nodes still have lower repulsion, but overall higher repulsion
         },
         animate: true,
         animationDuration: 700
-      }).run();
+    }).run();
 }
 
 function updateSampleMax(cy) {
