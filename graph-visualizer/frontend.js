@@ -171,8 +171,8 @@ function createTooltipContent(ele) {
         template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
         template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
         template.querySelector('#etip-frac').textContent = ele.data('leninter') + '/' + ele.data('lenunion');
-        template.querySelector('#etip-nsamples').textContent = ele.data('lenunion') || 'N/A';
-        template.querySelector('#etip-samples').textContent = ele.data('union').join(', ') || 'N/A';
+        template.querySelector('#etip-nsamples').textContent = ele.data('leninter') || 'N/A';
+        template.querySelector('#etip-samples').textContent = ele.data('inter').join(', ') || 'N/A';
         content = template.innerHTML;
     }
     return content;
