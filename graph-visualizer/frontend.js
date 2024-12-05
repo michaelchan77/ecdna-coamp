@@ -27,11 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
     cytoscape.use( cytoscapePopper(tippyFactory) );
 });
 
+let cy = null
+let nodeID = {};
+let inputNode = null
+
 async function loadGraph() {
     console.log("Load graph pressed");
 
+    cy = null
+    nodeID = {};
+    inputNode = null
+
     // input gene
-    const inputNode = $('#textBox').val().trim().toUpperCase();
+    inputNode = $('#textBox').val().trim().toUpperCase();
 
     // filters
     const minWeight = parseFloat($('#edgeWeight').val());
@@ -60,7 +68,7 @@ async function loadGraph() {
         const data = await response.json();
         console.log(data)
         // Initialize Cytoscape with fetched data
-        const cy = cytoscape({
+        cy = cytoscape({
             container: document.getElementById('cy'),
             elements: data,  // Use the data from the server
             style: [
@@ -73,7 +81,6 @@ async function loadGraph() {
         });
 
         // Dictionary to access node ids by name
-        let nodeID = {};
         cy.nodes().forEach(node => {
             nodeID[node.data('name')] = "#"+node.id();
         });
@@ -95,11 +102,11 @@ async function loadGraph() {
             row = document.createElement('tr');
     
             const cellName = document.createElement('td');
-            const geneName = node.data('name'); // Get the gene name
+            const geneName = node.data('name');
             const link = document.createElement('a');
             
             // Set the href attribute to the desired URL (customize this URL as needed)
-            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`; // Replace with actual URL
+            link.href = `https://depmap.org/portal/gene/${geneName}?tab=overview`;
             link.textContent = geneName; // Set the text to the gene name
             link.target = '_blank'; // Open the link in a new tab (optional)
 
@@ -115,6 +122,7 @@ async function loadGraph() {
             row.appendChild(cellName);
             row.appendChild(cellStatus);
             row.appendChild(cellWeight);
+
             datacontainer.appendChild(row);
 
             // Add click event to each row
@@ -122,6 +130,14 @@ async function loadGraph() {
                 const nodeName = cellName.textContent; // Assuming cellName text contains node ID
                 const node = cy.$(nodeID[nodeName]);
                 node.emit('tap');
+
+                // Highlight the clicked row
+                if (row.classList.contains('active')) {
+                    row.classList.remove('active'); // Remove highlight if already active
+                } else {
+                    // Add 'active' class to the clicked row
+                    row.classList.add('active');
+                }
             });
         });
 
@@ -154,6 +170,7 @@ async function loadGraph() {
     } catch (error) {
         alert(error.message);
     }
+
 }
 
 // Set tooltip content
@@ -171,8 +188,8 @@ function createTooltipContent(ele) {
         template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
         template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
         template.querySelector('#etip-frac').textContent = ele.data('leninter') + '/' + ele.data('lenunion');
-        template.querySelector('#etip-nsamples').textContent = ele.data('leninter') || 'N/A';
-        template.querySelector('#etip-samples').textContent = ele.data('inter').join(', ') || 'N/A';
+        template.querySelector('#etip-nsamples').textContent = ele.data('lenunion') || 'N/A';
+        template.querySelector('#etip-samples').textContent = ele.data('union').join(', ') || 'N/A';
         content = template.innerHTML;
     }
     return content;
@@ -251,6 +268,17 @@ function updateSampleMax(cy) {
     }
 }
 
+// Add event listener to table rows
+const rows = document.querySelectorAll('tr');
+
+rows.forEach(row => {
+    row.addEventListener('click', function () {
+        // Toggle the active class on the clicked row
+        this.classList.toggle('active');
+        console.log(this);
+    });
+});
+
 // Function to sort the table when clicking on column headers
 function sortTable(columnIndex) {
     const table = document.getElementById('data-table');
@@ -282,7 +310,90 @@ function sortTable(columnIndex) {
     if (noDataRow && rows.length === 0) tbody.appendChild(noDataRow);
 }
 
+// Function to generate CSV
+function generateCSV(datacontainercsv) {    
+    if (!datacontainercsv) {
+        alert('Data container is not available.');
+        return '';
+    }
+    const rows = Array.from(datacontainercsv.querySelectorAll('tr'));
+    const csv = [];
+
+    // Add header row to CSV
+    const header = ['Gene Name', 'Oncogene', 'Coamplification Frequency', 'Intersection Samples', 'Union Samples'];
+    csv.push(header.join(',')); // Join column labels with commas
+
+    
+    rows.forEach(row => {
+        const cols = Array.from(row.querySelectorAll('td')).map(cell => {
+            // For union and inter lists, join them in a string format that CSV can handle
+            const cellContent = cell.textContent;
+            if (cellContent.startsWith('[') && cellContent.endsWith(']')) {
+                // For lists, wrap them in quotes
+                return `"${cellContent.replace(/"/g, '""')}"`; // Double any quotes inside the content
+            }
+            return cellContent;
+        });
+        csv.push(cols.join(',')); // Join columns with commas
+    });
+
+    return csv.join('\n'); // Join rows with newline
+}
+
+// Add event listener for the download button
+document.getElementById('download-btn').addEventListener('click', () => {
+    const datacontainercsv = document.createElement('table');
+    
+    cy.nodes().forEach(node => {
+        row = document.createElement('tr');
+
+        const cellName = document.createElement('td');
+        const geneName = node.data('name');
+        cellName.textContent = geneName
+
+        cellStatus = document.createElement('td');
+        cellStatus.textContent = node.data('oncogene');
+
+        cellWeight = document.createElement('td');
+        cellUnion = document.createElement('td');
+        cellInter = document.createElement('td');
+
+        const edges = node.edgesWith(cy.$(nodeID[inputNode]));
+
+        const edgeData = edges[0]?.data() || {};
+
+        cellWeight.textContent = String(edgeData.weight?.toFixed(3) ?? 'N/A');
+        // Ensure the lists are wrapped in quotes to be treated as single cells
+        const unionList = edgeData.union ? `["${edgeData.union.join('", "')}"]` : 'N/A';
+        cellUnion.textContent = unionList;
+        
+        const interList = edgeData.inter ? `["${edgeData.inter.join('", "')}"]` : 'N/A';
+        cellInter.textContent = interList;
+        
+        row.appendChild(cellName);
+        row.appendChild(cellStatus);
+        row.appendChild(cellWeight);
+        row.appendChild(cellInter);
+        row.appendChild(cellUnion);
+        datacontainercsv.appendChild(row);
+
+    const csvContent = generateCSV(datacontainercsv);
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary download link
+    const link = document.createElement('a');
+    link.href = url;
+    const now = new Date();
+    // Format date and time (e.g., YYYY-MM-DD_HH-MM-SS)
+    const formattedDate = now.toISOString().replace(/:/g, '-').replace('T', '_').split('.')[0];
+    link.download = `AACoampGraph_${inputNode}_${formattedDate}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    });
+})
 // const cyContainer = document.getElementById('cy');
 // cyContainer.addEventListener('mouseup', () => {
 //     cy.resize();
-// });
+// })}
