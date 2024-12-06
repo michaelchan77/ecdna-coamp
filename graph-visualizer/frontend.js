@@ -329,8 +329,7 @@ function generateCSV(datacontainercsv) {
             // For union and inter lists, join them in a string format that CSV can handle
             const cellContent = cell.textContent;
             if (cellContent.startsWith('[') && cellContent.endsWith(']')) {
-                // For lists, wrap them in quotes
-                return `"${cellContent.replace(/"/g, '""')}"`; // Double any quotes inside the content
+                return `"${cellContent.replace(/"/g, '""')}"`; // Double any quotes inside the content to ensure list in single cell
             }
             return cellContent;
         });
@@ -363,7 +362,6 @@ document.getElementById('download-btn').addEventListener('click', () => {
         const edgeData = edges[0]?.data() || {};
 
         cellWeight.textContent = String(edgeData.weight?.toFixed(3) ?? 'N/A');
-        // Ensure the lists are wrapped in quotes to be treated as single cells
         const unionList = edgeData.union ? `["${edgeData.union.join('", "')}"]` : 'N/A';
         cellUnion.textContent = unionList;
         
@@ -385,7 +383,7 @@ document.getElementById('download-btn').addEventListener('click', () => {
     const link = document.createElement('a');
     link.href = url;
     const now = new Date();
-    // Format date and time (e.g., YYYY-MM-DD_HH-MM-SS)
+    // Format date and time (YYYY-MM-DD_HH-MM-SS)
     const formattedDate = now.toISOString().replace(/:/g, '-').replace('T', '_').split('.')[0];
     link.download = `AACoampGraph_${inputNode}_${formattedDate}.csv`;
     document.body.appendChild(link);
