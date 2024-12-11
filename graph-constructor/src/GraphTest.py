@@ -14,19 +14,20 @@ def main():
     # paths
     # -----
     # michael
-    # small_test_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
-    # ccle_path = "/Users/michael/Downloads/amplicon_repo_datasets/ccle_aggregated_results.csv"
-    # pcawg_path = "/Users/michael/Downloads/amplicon_repo_datasets/pcawg_aggregated_results.csv"
-    # tcga_path = "/Users/michael/Downloads/amplicon_repo_datasets/tcga_aggregated_results.csv"
-    # oncogene_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
-    # # dhruv
+    small_test_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
+    ccle_path = "/Users/michael/Downloads/amplicon_repo_datasets/ccle_aggregated_results.csv"
+    pcawg_path = "/Users/michael/Downloads/amplicon_repo_datasets/pcawg_aggregated_results.csv"
+    tcga_path = "/Users/michael/Downloads/amplicon_repo_datasets/tcga_aggregated_results.csv"
+    oncogene_path = "/Users/michael/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
+    gene_alias_path = "/Users/michael/Documents/GitHub/ecdna-depmap/data/gene_aliases.csv"
+    # dhruv
     # small_test_path = "AA_aggregated_results_small_example.csv"
     # # kyra
-    small_test_path = "/mnt/c/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
-    ccle_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/ccle_aggregated_results.csv"
-    pcawg_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/pcawg_aggregated_results.csv"
-    tcga_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/tcga_aggregated_results.csv"
-    oncogene_path = "/mnt/c/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
+    # small_test_path = "/mnt/c/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/small_dataset.csv"
+    # ccle_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/ccle_aggregated_results.csv"
+    # pcawg_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/pcawg_aggregated_results.csv"
+    # tcga_path = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/tcga_aggregated_results.csv"
+    # oncogene_path = "/mnt/c/Users/Owner/Documents/GitHub/ecdna-depmap/frequency-graph/data/oncogene_list_hg38.txt"
 
     # import datasets
     # ---------------
@@ -37,7 +38,14 @@ def main():
     aggregated = pd.concat([ccle, pcawg, tcga])
     with open (oncogene_path) as f:
         oncogenes = f.read().splitlines()
-    
+
+    # # uncomment when gene linker made
+    # aliasdf = pd.read_csv(gene_alias_path)
+    # # of form [REFSEQCOL][DEPMAPALIASCOL]
+    # alias_dict = pd.Series(aliasdf.DEPMAPALIASCOL.values,index=aliasdf.REFSEQCOL).to_dict()
+    # for k,v in alias_dict.items():
+    #     print(k, v)
+
     # build, print, export graph for small dataset
     # -----------
     if 0:
@@ -65,13 +73,19 @@ def main():
     
     # ccle graph
     if 1:
+
+        start = time.process_time()
+
         print("CCLE GRAPH")
         print("-----------")
-        graph = Graph(ccle, oncogene_list=oncogenes)
+        graph = Graph(ccle, oncogene_list=oncogenes)#, names=alias_dict)
         # print("Nodes:", graph.NumNodes(), " Edges:", graph.NumEdges())
         # Nodes: 3320  Edges: 118033
         graph.Export("neo4j_ccle_edges.csv", "neo4j_ccle_nodes.csv")
         print("-----------\n")
+
+        end = time.process_time()
+        print("Export graph:", end - start, " seconds")
 
     # test aggregated dataset
     # -----------

@@ -66,33 +66,51 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
     print("DISPLAY RECORDS")
     print()
     for record in result:
+        # ----------------------------------------------------------------------
         print(record)
-        nodes.setdefault(record['n']['name'], {'data': {'id': record['n']['id'],
-                                                        'name': record['n']['name'],
-                                                        'oncogene': record['n']['oncogene']}})
-        nodes.setdefault(record['m']['name'], {'data': {'id': record['m']['id'],
-                                                        'name': record['m']['name'],
-                                                        'oncogene': record['m']['oncogene']}})
-        edges.setdefault(record['n']['name'] + ' -- ' + record['m']['name'], {'data': {'source': record['n']['id'], 
-                                                                                       'target': record['m']['id'],
-                                                                                       'weight': record['r']['weight'],
-                                                                                       'lenunion': record['r']['lenunion'],
-                                                                                       'union': record['r']['union'],
-                                                                                       'name': record['n']['name'] + ' -- ' + record['m']['name'],
-                                                                                       'interaction': 'interacts with'
-                                                                                        }})
+        # source
+        nodes.setdefault(record['n']['name'], 
+                         {'data': {'id': record['n']['id'],
+                                   'name': record['n']['name'],
+                                   'oncogene': record['n']['oncogene'],
+                                   'samples': record['n']['samples']}})
+        # target
+        nodes.setdefault(record['m']['name'], 
+                         {'data': {'id': record['m']['id'],
+                                   'name': record['m']['name'],
+                                   'oncogene': record['m']['oncogene'],
+                                   'samples': record['m']['samples']}})
+        # edge
+        edges.setdefault(record['n']['name'] + ' -- ' + record['m']['name'], 
+                         {'data': {'source': record['n']['id'],
+                                   'target': record['m']['id'],
+                                   'weight': record['r']['weight'],
+                                   'leninter': record['r']['leninter'],
+                                   'inter': record['r']['inter'],
+                                   'lenunion': record['r']['lenunion'],
+                                   'union': record['r']['union'],
+                                   'name': record['n']['name'] + ' -- ' + record['m']['name'],
+                                   'interaction': 'interacts with'
+                                   }})
+        # neighbor nodes/edges
         if all_edges and record.get('r2') and record.get('o'):
-            nodes.setdefault(record['o']['name'], {'data': {'id': record['o']['id'],
-                                                            'name': record['o']['name'],
-                                                            'oncogene': record['o']['oncogene']}})
-            edges.setdefault(record['m']['name'] + ' -- ' + record['o']['name'], {'data': {'source': record['m']['id'], 
-                                                                                            'target': record['o']['id'],
-                                                                                            'weight': record['r2']['weight'],
-                                                                                            'lenunion': record['r2']['lenunion'],
-                                                                                            'union': record['r2']['union'],
-                                                                                            'name': record['m']['name'] + ' -- ' + record['o']['name'],
-                                                                                            'interaction': 'interacts with'
-                                                                                             }})
+            nodes.setdefault(record['o']['name'], 
+                             {'data': {'id': record['o']['id'],
+                                       'name': record['o']['name'],
+                                       'oncogene': record['o']['oncogene'],
+                                       'samples': record['o']['samples']}})
+            edges.setdefault(record['m']['name'] + ' -- ' + record['o']['name'], 
+                             {'data': {'source': record['m']['id'], 
+                                       'target': record['o']['id'],
+                                       'weight': record['r2']['weight'],
+                                       'leninter': record['r2']['leninter'],
+                                       'inter': record['r2']['inter'],
+                                       'lenunion': record['r2']['lenunion'],
+                                       'union': record['r2']['union'],
+                                       'name': record['m']['name'] + ' -- ' + record['o']['name'],
+                                       'interaction': 'interacts with'
+                                       }})
+        # ----------------------------------------------------------------------
         print()
         print("CURRENT:")
         print(nodes)

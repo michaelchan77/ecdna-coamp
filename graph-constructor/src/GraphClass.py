@@ -7,7 +7,7 @@ from NodeClass import Node
 class Graph:
 
 
-	def __init__(self, dataset=None, oncogene_list=None, amp_type="ecDNA", loc_type="feature", threshold=0): # Michael
+	def __init__(self, dataset=None, oncogene_list=None, names=None, amp_type="ecDNA", loc_type="feature", threshold=0): # Michael
 		"""
 		Parameters:
 			self (Graph) : Graph object 
@@ -27,7 +27,7 @@ class Graph:
 		if dataset is None:
 			print("Read in Graph")	
 		else:
-			self.BuildGraph(dataset, oncogene_list)
+			self.BuildGraph(dataset, oncogene_list, names)
 
 	def SetThreshold(self, num):
 		self.threshold = num
@@ -43,7 +43,7 @@ class Graph:
 		genelist = re.findall(pattern, input)
 		return genelist
 
-	def BuildGraph(self, dataset, oncogene_list): # Dhruv
+	def BuildGraph(self, dataset, oncogene_list, names): # Dhruv
 		"""
 		Build a frequency graph based on a given dataset (AA agg results)
 	
@@ -76,7 +76,11 @@ class Graph:
 				if found_node == False:
 					id += 1
 					oncogene = gene in oncogene_list
-					node = Node(id, gene, oncogene, [current_sample])
+					if names is not None:
+						alias = names[gene]
+					else:
+						alias = ''
+					node = Node(id, gene, oncogene, alias, [current_sample])
 					self.nodelist.append(node)
 
 		for node1 in self.nodelist:
@@ -228,20 +232,24 @@ class Graph:
 					# edgelist.append((start.GetLabel(), end[1].GetLabel(), end[2], len(start.Union(end[1]))))
 					# format sample list
 					union = [s.split("_")[0] for s in start.Union(end[1])]
-					edgelist.append((start.GetID(), end[1].GetID(), end[2], len(union), '|'.join(union)))
+					inter = [s.split("_")[0] for s in start.Intersect(end[1])]
+					edgelist.append((start.GetID(), end[1].GetID(), end[2], 
+					  				 len(union), '|'.join(union), len(inter), 
+									 '|'.join(inter)))
 		# export edge list
 		with open(outfile, 'wt') as f:
 			writer = csv.writer(f) #, delimiter='\t')
-			writer.writerow(['source', 'target', 'weight', 'lenunion', 'union'])
+			writer.writerow(['source', 'target', 'weight', 'lenunion', 'union', 'leninter', 'inter'])
 			for edge in edgelist:
-				writer.writerow([edge[0], edge[1], edge[2], edge[3], edge[4]])
+				writer.writerow([edge[0], edge[1], edge[2], edge[3], edge[4], edge[5], edge[6]])
 		# export node list (for oncogene status)
 		if nodefile is not None:
 			with open(nodefile, 'wt') as f:
 				writer = csv.writer(f) #, delimiter='\t')
-				writer.writerow(['id', 'label', 'oncogene_status'])
+				writer.writerow(['id', 'label', 'oncogene_status', 'alias', 'samples'])
 				for node in self.nodelist:
-					writer.writerow([node.GetID(), node.GetLabel(), node.GetOncogeneStatus()])				
+					samples = [s.split("_")[0] for s in node.GetLocs()]
+					writer.writerow([node.GetID(), node.GetLabel(), node.GetOncogeneStatus(), node.GetAlias(), '|'.join(samples)])				
 	
 	def Read(self, table): # Dhruv
 		"""
