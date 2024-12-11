@@ -73,6 +73,9 @@ def main():
     
     # ccle graph
     if 1:
+
+        start = time.process_time()
+
         print("CCLE GRAPH")
         print("-----------")
         graph = Graph(ccle, oncogene_list=oncogenes)#, names=alias_dict)
@@ -80,6 +83,9 @@ def main():
         # Nodes: 3320  Edges: 118033
         graph.Export("neo4j_ccle_edges.csv", "neo4j_ccle_nodes.csv")
         print("-----------\n")
+
+        end = time.process_time()
+        print("Export graph:", end - start, " seconds")
 
     # test aggregated dataset
     # -----------
