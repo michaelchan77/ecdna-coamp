@@ -161,12 +161,14 @@ button:hover {
     font-weight: bold; /* Emphasize header */
     border-bottom: 2px solid #e0e0e0;
  }
- 
- 
- tr:hover td {
-    background-color: #e2e2e4; /* Highlight rows on hover */
+
+ tr.active td {
+    background-color: #b6b5b5 !important; /* Highlight color */
  }
- 
+
+ tr:hover td {
+    background-color: #e2e2e4; /* Highlight on hover */
+ }
  
  .no-data {
     height: 50px; /* Ensure this row takes up space */
@@ -174,10 +176,10 @@ button:hover {
     color: #888; /* Lighter text color for a placeholder feel */
  }
  
-.tippy-box[data-theme~='edge'] {
+ .tippy-box[data-theme~='edge'] {
     background-color: rgba(0, 0, 0, 0.7);
     /* background-color: #ffd500; */
   }
-.tippy-box[data-theme~='node'] {
+ .tippy-box[data-theme~='node'] {
     background-color: rgba(0, 0, 0, 0.7);
-}
+ }
