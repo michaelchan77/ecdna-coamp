@@ -29,10 +29,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 let cy = null
 let nodeID = {};
+let allTooltips = {};
 let inputNode = null
 
 async function loadGraph() {
     console.log("Load graph pressed");
+
+    removeAllTooltips();
 
     cy = null
     nodeID = {};
@@ -126,18 +129,14 @@ async function loadGraph() {
             datacontainer.appendChild(row);
 
             // Add click event to each row
-            row.addEventListener('click', () => {
+            row.addEventListener('click', (event) => {
                 const nodeName = cellName.textContent; // Assuming cellName text contains node ID
                 const node = cy.$(nodeID[nodeName]);
                 node.emit('tap');
 
-                // Highlight the clicked row
-                if (row.classList.contains('active')) {
-                    row.classList.remove('active'); // Remove highlight if already active
-                } else {
-                    // Add 'active' class to the clicked row
-                    row.classList.add('active');
-                }
+                const clickedRow = event.currentTarget;
+                clickedRow.classList.toggle('active');
+                console.log(clickedRow);
             });
         });
 
@@ -213,8 +212,17 @@ function makeTips(cy) {
             ele.toggleClass('highlighted');
             tooltip.state.isVisible ? tooltip.hide() : tooltip.show();
         });
+        allTooltips[ele.id()] = tooltip;
         tooltips[ele.id()] = tooltip;
     });
+}
+
+function removeAllTooltips() {
+    Object.values(allTooltips).forEach(tooltip => {
+        tooltip.hide(); // Hide the tooltip
+        tooltip.destroy(); // Destroy the tooltip instance
+    });
+    allTooltips = {}; // Reset the object
 }
 
 function layout(cy, input) {
@@ -268,17 +276,6 @@ function updateSampleMax(cy) {
     }
 }
 
-// Add event listener to table rows
-const rows = document.querySelectorAll('tr');
-
-rows.forEach(row => {
-    row.addEventListener('click', function () {
-        // Toggle the active class on the clicked row
-        this.classList.toggle('active');
-        console.log(this);
-    });
-});
-
 // Function to sort the table when clicking on column headers
 function sortTable(columnIndex) {
     const table = document.getElementById('data-table');
@@ -329,7 +326,8 @@ function generateCSV(datacontainercsv) {
             // For union and inter lists, join them in a string format that CSV can handle
             const cellContent = cell.textContent;
             if (cellContent.startsWith('[') && cellContent.endsWith(']')) {
-                return `"${cellContent.replace(/"/g, '""')}"`; // Double any quotes inside the content to ensure list in single cell
+                // For lists, wrap them in quotes
+                return `"${cellContent.replace(/"/g, '""')}"`; // Double any quotes inside the content
             }
             return cellContent;
         });
@@ -383,7 +381,7 @@ document.getElementById('download-btn').addEventListener('click', () => {
     const link = document.createElement('a');
     link.href = url;
     const now = new Date();
-    // Format date and time (YYYY-MM-DD_HH-MM-SS)
+    // Format date and time (e.g., YYYY-MM-DD_HH-MM-SS)
     const formattedDate = now.toISOString().replace(/:/g, '-').replace('T', '_').split('.')[0];
     link.download = `AACoampGraph_${inputNode}_${formattedDate}.csv`;
     document.body.appendChild(link);
