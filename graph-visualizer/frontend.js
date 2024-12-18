@@ -307,6 +307,15 @@ function sortTable(columnIndex) {
     if (noDataRow && rows.length === 0) tbody.appendChild(noDataRow);
 }
 
+// Helper function to format lists for csv, accounting for quotes
+function formatCell(cellContent) {
+    if (cellContent.startsWith('[') && cellContent.endsWith(']')) {
+        // For formatting, need lists to be formatted as lists in csv and not a string
+        return `"${cellContent.replace(/"/g, '""')}"`; 
+    }
+    return cellContent;
+}
+
 // Function to generate CSV
 function generateCSV(datacontainercsv) {    
     if (!datacontainercsv) {
@@ -321,26 +330,35 @@ function generateCSV(datacontainercsv) {
     csv.push(header.join(',')); // Join column labels with commas
 
     
-    rows.forEach(row => {
-        const cols = Array.from(row.querySelectorAll('td')).map(cell => {
-            // For union and inter lists, join them in a string format that CSV can handle
-            const cellContent = cell.textContent;
-            if (cellContent.startsWith('[') && cellContent.endsWith(']')) {
-                // For lists, wrap them in quotes
-                return `"${cellContent.replace(/"/g, '""')}"`; // Double any quotes inside the content
-            }
-            return cellContent;
-        });
-        csv.push(cols.join(',')); // Join columns with commas
+    // Separate the first row
+    const firstRow = rows.shift(); // Remove the first row (query gene needs to be at top for reference)
+    const firstRowData = Array.from(firstRow.querySelectorAll('td')).map(cell => {
+        return formatCell(cell.textContent);
+    });
+    csv.push(firstRowData.join(','));
+
+    // Sort remaining rows by `cell.weight` in descending order
+    const sortedRows = rows.sort((a, b) => {
+        const weightA = parseFloat(a.querySelector('td:nth-child(3)').textContent) || 0;
+        const weightB = parseFloat(b.querySelector('td:nth-child(3)').textContent) || 0;
+        return weightB - weightA;
     });
 
-    return csv.join('\n'); // Join rows with newline
+    // Process sorted rows
+    sortedRows.forEach(row => {
+        const cols = Array.from(row.querySelectorAll('td')).map(cell => {
+            return formatCell(cell.textContent);
+        });
+        csv.push(cols.join(','));
+    });
+
+    return csv.join('\n'); 
 }
 
 // Add event listener for the download button
 document.getElementById('download-btn').addEventListener('click', () => {
     const datacontainercsv = document.createElement('table');
-    
+    // Generate a table from cytoscape graph for export
     cy.nodes().forEach(node => {
         row = document.createElement('tr');
 
