@@ -59,15 +59,15 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
             RETURN n, r, m
             LIMIT 50
             """.format(mw = min_weight, ms = min_samples)
-    print(query)
+    #print(query)
     result = driver.run(query, name=name)
     nodes = {}
     edges = {}
-    print("DISPLAY RECORDS")
-    print()
+    #print("DISPLAY RECORDS")
+    #print()
     for record in result:
         # ----------------------------------------------------------------------
-        print(record)
+        #print(record)
         # source
         nodes.setdefault(record['n']['name'], 
                          {'data': {'id': record['n']['id'],
@@ -99,10 +99,14 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
                                        'name': record['o']['name'],
                                        'oncogene': record['o']['oncogene'],
                                        'samples': record['o']['samples']}})
+            
+            triple_intersect = [loc for loc in record['r2']['inter'] if loc in set(record['n']['samples'])]
+            new_edge_weight = len(triple_intersect) / len(set(record['n']['samples']))
+            print(record['m']['id'], record['o']['id'], record['r2']['weight'], new_edge_weight)
             edges.setdefault(record['m']['name'] + ' -- ' + record['o']['name'], 
                              {'data': {'source': record['m']['id'], 
                                        'target': record['o']['id'],
-                                       'weight': record['r2']['weight'],
+                                       'weight': new_edge_weight,
                                        'leninter': record['r2']['leninter'],
                                        'inter': record['r2']['inter'],
                                        'lenunion': record['r2']['lenunion'],
@@ -111,11 +115,11 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
                                        'interaction': 'interacts with'
                                        }})
         # ----------------------------------------------------------------------
-        print()
-        print("CURRENT:")
-        print(nodes)
-        print(edges)
-        print()
+        #print()
+        #print("CURRENT:")
+        #print(nodes)
+        #print(edges)
+        #print()
     return list(nodes.values()), list(edges.values())
 
 @app.route('/getNodeData', methods=['GET'])
