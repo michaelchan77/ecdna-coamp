@@ -8,7 +8,7 @@ def main():
     # ---------
     # (michael)
     amp_repo_datasets_dir = "/Users/michael/Downloads/amplicon_repo_datasets/"
-    # gene_alias_path = "/Users/michael/Documents/GitHub/ecdna-depmap/data/gene_aliases.csv"
+    gene_alias_path = "/Users/michael/Documents/GitHub/ecdna-coamp/graph-constructor/data/coamp_gene_mapper_12.21.24.tsv"
 
     # (kyra)
     # amp_repo_datasets_dir = "/mnt/c/Users/Owner/OneDrive/Documents/BENG_Senior_Design/DepMap/data/"
@@ -23,24 +23,20 @@ def main():
     # tcga = pd.read_csv(amp_repo_datasets_dir + "tcga_aggregated_results.csv")
     # aggregated = pd.concat([ccle, pcawg, tcga])
 
-    # (to work on when gene alias file is made)
-    # aliasdf = pd.read_csv(gene_alias_path)
-    # # of form [REFSEQCOL][DEPMAPALIASCOL]
-    # alias_dict = pd.Series(aliasdf.DEPMAPALIASCOL.values,index=aliasdf.REFSEQCOL).to_dict()
-    # for k,v in alias_dict.items():
-    #     print(k, v)
+    aliasdf = pd.read_csv(gene_alias_path, sep='\t')
+    alias_dict = pd.Series(aliasdf['DepMapGeneName'].values, index=aliasdf['GeneName']).to_dict()
 
     # build ccle graph
     start = time.process_time()
 
     print("CCLE GRAPH")
     print("-----------")
-    graph = Graph(ccle)                 #, names=alias_dict)
+    graph = Graph(dataset=ccle, aliasdict=alias_dict)
     
     print("Nodes:", graph.NumNodes())   # 3320
     print(" Edges:", graph.NumEdges())  # 118033
 
-    # graph.Nodes().to_csv('test_nodes.csv', index=False)  
+    graph.Nodes().to_csv('test_nodes.csv', index=False)  
     # graph.Edges().to_csv('test_edges.csv', index=False)  
 
     end = time.process_time()
