@@ -192,3 +192,52 @@ if __name__ == '__main__':
     # with app.app_context():  # Create an application context
     #     test_fetch_subgraph()  # Call this to test fetch_subgraph
     
+
+# # ChatGPT example load function to support dynamic user upload of datasets into Neo4j on site
+# # -------
+
+# from ../graph-constructor/src/graph import Graph
+
+# @app.route('/loadGraph', methods=['POST'])
+# def load_graph():
+#     # in front end: project selector ui, function to iterate through json files 
+#     # of selected projects and pass along all runs (?)
+#     # to this function
+
+#     driver = get_driver()
+
+#     # extract relevant info from frontend request
+#     project_info_as_jsons = request.json()
+
+#     # construct graph
+#     graph = Graph(project_info_as_jsons) # currently takes in aggregated results dataframe, so will need to rework CreateNodes()
+#     nodes = graph.Nodes()
+#     edges = graph.Edges()
+
+#     if not nodes or not edges:
+#         return jsonify({"error": "Nodes and edges data are required"}), 400
+
+#     # drop existing graph (change to drop if required)
+#     with driver.session() as session:
+#         session.run("MATCH (n) DETACH DELETE n")
+    
+#     # load new graph
+#     with driver.session() as session:
+#         # add nodes (update query to reflect neo4j.txt)
+#         session.run(
+#             """
+#             UNWIND $nodes AS node
+#             CREATE (n:Node {id: node.id, name: node.name, oncogene: node.oncogene, samples: node.samples})
+#             """,
+#             nodes=nodes
+#         )
+#         # add edges (update query to reflect neo4j.txt)
+#         session.run(
+#             """
+#             UNWIND $edges AS edge
+#             MATCH (source:Node {id: edge.source}), (target:Node {id: edge.target})
+#             CREATE (source)-[:CONNECTED {weight: edge.weight, inter: edge.inter, union: edge.union}]->(target)
+#             """,
+#             edges=edges
+#         )
+#     return jsonify({"message": "Graph loaded successfully"}), 200

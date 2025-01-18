@@ -6,7 +6,7 @@ from collections import defaultdict
 # attempt to streamline by creating node and edge dataframes directly
 class Graph:
 
-	def __init__(self, dataset=None, names=None, amp_type="ecDNA", loc_type="amplicon"):
+	def __init__(self, dataset=None, amp_type="ecDNA", loc_type="amplicon"):
 		"""
 		Parameters:
 			self (Graph) : Graph object 
@@ -17,13 +17,12 @@ class Graph:
 			None
 		"""
 		if dataset is None:
-			print("Error: read in graph")	
+			print("Error: provide Amplicon Architect annotations")	
 		else:
 			self.amp_type = amp_type
 			self.loc_type = loc_type
 			self.nodes_df = pd.DataFrame({
 				"label": [],								# str
-				"alias": [],								# str
 				"oncogene_status": pd.Series(dtype=bool),	# bool
 				"amplicons": pd.Series(dtype=object)		# list
 				# "cell_lines": pd.Series(dtype=object)		# list	
@@ -50,7 +49,7 @@ class Graph:
 		genelist = re.findall(pattern, input)
 		return genelist
 
-	def CreateNodes(self, dataset, names=None):
+	def CreateNodes(self, dataset):
 		"""
 		Create a nodes_df by iterating through the dataset, adding new genes to 
 		a list of dictionaries. Update the amplicons for existing genes, then 
@@ -59,10 +58,10 @@ class Graph:
 		Parameters: 
 			self (Graph) : Graph object 
 			dataset (tsv file) : AA aggregated results file
-			names (df) : aliases
 		Return: 
 			None
 		"""
+		TEST_NAMES_NOT_MAPPED_COUNT = 0
 		# dictionary for fast lookups of gene labels
 		gene_index = {}
 		# list to store new rows for concatenation
@@ -86,7 +85,6 @@ class Graph:
 				else:
 					new_gene = {
 						'label': gene,
-						'alias': gene,
 						'oncogene_status': gene in oncogenes,
 						'amplicons': [currentamp]
                 	}
@@ -161,16 +159,28 @@ class Graph:
 	# get functions
 	# -------------
 	def NumNodes(self):
-		return len(self.nodes_df)
+		try:
+			return len(self.nodes_df)
+		except:
+			print('Error: build graph')
 
 	def NumEdges(self):
-		return len(self.edges_df)
+		try:
+			return len(self.edges_df)
+		except:
+				print('Error: build graph')
 	
 	def Nodes(self):
-		return self.nodes_df
+		try:
+			return self.nodes_df
+		except:
+			print('Error: build graph')
 
 	def Edges(self):
-		return self.edges_df
+		try:
+			return self.edges_df
+		except:
+			print('Error: build graph')
 	
 	"""
 	# PREV CREATE_NODES SNIPPET
