@@ -26,6 +26,18 @@
         <textarea id="textBox" placeholder="Enter gene"></textarea>
         <button id="storeButton">→</button>
         <p id="storedText"></p>
+        <div class="slider-box">
+            <div class="slider-header">
+                Query Returned <span id="queryResult">_ _</span> Genes
+            </div>
+            <div class="slider-separator"></div>
+            <div class="slider-container">
+                <div class="value-left">10</div>
+                <div class="slider-tooltip" id="sliderTooltip">50</div>
+                <input type="range" id="limit" class="slider" min="10" max="50" step="1" value="50">
+                <div class="value-right" id="limitMaxText">50</div>
+            </div>
+        </div>
     </div>
     
     <div class="settings">
@@ -66,22 +78,23 @@
         </div>
     </div>
 
+    <button id="download-btn">Download CSV</button>
     <!-- container for cytoscape graph -->
     <div class="container">
         <div id="cy" class="cy-container"></div>
         <div class="table-wrapper">
-        <button id="download-btn">Download CSV</button>
         <table id="data-table">
             <thead>
                 <tr>
+                    <th>Rank</th>
                     <th>Gene</th>
                     <th>Oncogene</th>
-                    <th onclick="sortTable(2)">Coamplification Frequency</th>
+                    <th onclick="sortTable(3)">Coamplification Frequency</th>
                 </tr>
             </thead>
             <tbody id="data-container">
                 <tr class="no-data">
-                    <td colspan="3">No data available</td>
+                    <td colspan="4">No data available</td>
                 </tr>
             </tbody>
         </table>
@@ -92,14 +105,14 @@
     <div id="node-template" style="display: none;">
         <strong>Gene:</strong> <span id="ntip-name"></span><br>
         <strong>Oncogene:</strong> <span id="ntip-oncogene"></span><br>
-        <strong>Amplified in:</strong> <span id="ntip-nsamples"></span> sample(s)
+        <strong>Amplified in:</strong> <span id="ntip-nsamples"></span> samples
     </div>
     <div id="edge-template" style="display: none;">
         <strong>Relationship:</strong> <span id="etip-name"></span><br>
         <strong>Coamplification frequency:</strong> <span id="etip-weight"></span><br>
         <strong>Coamplification fraction:</strong> <span id="etip-frac"></span><br>
-        <strong>Coamplified in:</strong> <span id="etip-nsamples"></span> sample(s)<br>
-        <strong>Sample(s):</strong> <span id="etip-samples"></span>
+        <strong>Coamplified in:</strong> <span id="etip-nsamples"></span> samples<br>
+        <strong>Samples:</strong> <span id="etip-samples"></span>
     </div>
 
     <!-- Initialize Cytoscape.js -->

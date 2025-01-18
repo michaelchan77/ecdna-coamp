@@ -27,10 +27,35 @@ document.addEventListener('DOMContentLoaded', function () {
     cytoscape.use( cytoscapePopper(tippyFactory) );
 });
 
+function filterData(data, topN) {
+    // Sort edges by weight in descending order
+    const sortedEdges = data.edges.sort((a, b) => b.data.weight - a.data.weight);
+  
+    // Select the top N edges
+    const topEdges = sortedEdges.slice(0, topN);
+  
+    // Get the set of node IDs referenced in the top edges
+    const nodeIds = new Set();
+    topEdges.forEach(edge => {
+      nodeIds.add(edge.data.source);
+      nodeIds.add(edge.data.target);
+    });
+  
+    // Filter nodes to include only those in the nodeIds set
+    const filteredNodes = data.nodes.filter(node => nodeIds.has(node.data.id));
+  
+    // Return the filtered dataset
+    return {
+      edges: topEdges,
+      nodes: filteredNodes
+    };
+  }
+
 let cy = null
 let nodeID = {};
 let allTooltips = {};
 let inputNode = null
+let total_data = 0;
 
 async function loadGraph() {
     console.log("Load graph pressed");
@@ -48,6 +73,7 @@ async function loadGraph() {
     const minWeight = parseFloat($('#edgeWeight').val());
     const sampleMinimum = parseFloat($('#numSamples').val());
     const oncogenesChecked = $('#oncogenes_only').is(':checked');
+    const limit = parseInt($('#limit').val());
     const allEdgesChecked = $('#all_edges').is(':checked');
     // print vars
     document.getElementById('storedText').textContent = String([minWeight, sampleMinimum, oncogenesChecked, allEdgesChecked]);
@@ -69,11 +95,13 @@ async function loadGraph() {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log(data) 
+        total_data = data.nodes.length;
+        const filtered_data = filterData(data, limit)
         // Initialize Cytoscape with fetched data
         cy = cytoscape({
             container: document.getElementById('cy'),
-            elements: data,  // Use the data from the server
+            elements: filtered_data,  // Use the data from the server
             style: [
                 { selector: 'node', style: { 'background-color': '#A7C6ED', 'label': '' } },
                 { selector: `node[name="${inputNode}"], node.highlighted`, style: {'z-index': 100, 'label': 'data(name)' } }, //, 'border-width': 2, 'border-color': 'black', 'border-style': 'solid' } },
@@ -92,6 +120,8 @@ async function loadGraph() {
         
         // Update sample slider max
         updateSampleMax(cy);
+        // Updata limit slider
+        updateLimitMax(cy);
         //styleNodes(cy, inputNode);
         layout(cy, inputNode);
         // Make tooltips for all elements
@@ -101,9 +131,14 @@ async function loadGraph() {
         const datacontainer = document.getElementById('data-container');
         datacontainer.innerHTML = ''; // Clear previous rows
 
+        let rownumber = 0;
+
         cy.nodes().forEach(node => {
             row = document.createElement('tr');
     
+            rownumber_element = document.createElement('td');
+            rownumber_element.textContent = rownumber;
+
             const cellName = document.createElement('td');
             const geneName = node.data('name');
             const link = document.createElement('a');
@@ -122,11 +157,14 @@ async function loadGraph() {
             edges = node.edgesWith(cy.$(nodeID[inputNode]));
             cellWeight.textContent = String(edges[0]?.data('weight').toFixed(3) ?? 'N/A');
             
+            row.appendChild(rownumber_element);
             row.appendChild(cellName);
             row.appendChild(cellStatus);
             row.appendChild(cellWeight);
 
             datacontainer.appendChild(row);
+
+            rownumber++;
 
             // Add click event to each row
             row.addEventListener('click', (event) => {
@@ -172,6 +210,18 @@ async function loadGraph() {
 
 }
 
+// Select the button and slider elements
+const button = document.getElementById("storeButton");
+
+const slider = document.getElementById('limit');
+const tooltip = document.getElementById('sliderTooltip');
+
+slider.addEventListener('input', function () {
+    const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+    tooltip.style.left = `calc(${value}% - ${tooltip.offsetWidth / 2}px)`;
+    tooltip.textContent = slider.value; 
+});
+
 // Set tooltip content
 function createTooltipContent(ele) {
     let content = '';
@@ -187,8 +237,8 @@ function createTooltipContent(ele) {
         template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
         template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
         template.querySelector('#etip-frac').textContent = ele.data('leninter') + '/' + ele.data('lenunion');
-        template.querySelector('#etip-nsamples').textContent = ele.data('leninter') || 'N/A';
-        template.querySelector('#etip-samples').textContent = ele.data('inter').join(', ') || 'N/A';
+        template.querySelector('#etip-nsamples').textContent = ele.data('lenunion') || 'N/A';
+        template.querySelector('#etip-samples').textContent = ele.data('union').join(', ') || 'N/A';
         content = template.innerHTML;
     }
     return content;
@@ -276,6 +326,14 @@ function updateSampleMax(cy) {
     }
 }
 
+function updateLimitMax(cy) {
+    if (cy) {
+        document.getElementById('queryResult').textContent = total_data;
+        document.getElementById('limit').max = total_data;
+        document.getElementById('limitMaxText').textContent = total_data;
+    }
+}
+
 // Function to sort the table when clicking on column headers
 function sortTable(columnIndex) {
     const table = document.getElementById('data-table');
@@ -301,8 +359,15 @@ function sortTable(columnIndex) {
                 : cellB.localeCompare(cellA);
         }
     });
+    let rownumber = 1;
     // Re-add sorted rows to the tbody
-    rows.forEach(row => tbody.appendChild(row));
+    rows.forEach(
+        row => {
+            row.children[0].innerText = rownumber;
+            tbody.appendChild(row);
+            rownumber++;
+        }
+    )
     // Re-add the "No data available" row if needed
     if (noDataRow && rows.length === 0) tbody.appendChild(noDataRow);
 }
@@ -407,7 +472,3 @@ document.getElementById('download-btn').addEventListener('click', () => {
     document.body.removeChild(link);
     });
 })
-// const cyContainer = document.getElementById('cy');
-// cyContainer.addEventListener('mouseup', () => {
-//     cy.resize();
-// })}
