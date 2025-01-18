@@ -6,7 +6,7 @@ from collections import defaultdict
 # attempt to streamline by creating node and edge dataframes directly
 class Graph:
 
-	def __init__(self, dataset=None, aliasdict=None, amp_type="ecDNA", loc_type="amplicon"):
+	def __init__(self, dataset=None, amp_type="ecDNA", loc_type="amplicon"):
 		"""
 		Parameters:
 			self (Graph) : Graph object 
@@ -18,14 +18,11 @@ class Graph:
 		"""
 		if dataset is None:
 			print("Error: provide Amplicon Architect annotations")	
-		if aliasdict is None:
-			print("Error: provide dictionary of DepMap names")	
 		else:
 			self.amp_type = amp_type
 			self.loc_type = loc_type
 			self.nodes_df = pd.DataFrame({
 				"label": [],								# str
-				"alias": [],								# str
 				"oncogene_status": pd.Series(dtype=bool),	# bool
 				"amplicons": pd.Series(dtype=object)		# list
 				# "cell_lines": pd.Series(dtype=object)		# list	
@@ -38,7 +35,7 @@ class Graph:
 			# 	"inter": pd.Series(dtype=object),			# list
 			# 	"union": pd.Series(dtype=object)			# list
 			# })
-			self.CreateNodes(dataset, aliasdict)
+			self.CreateNodes(dataset)
 			self.CreateEdges()
 
 	def ExtractGenes(self, input):
@@ -52,7 +49,7 @@ class Graph:
 		genelist = re.findall(pattern, input)
 		return genelist
 
-	def CreateNodes(self, dataset, aliasdict):
+	def CreateNodes(self, dataset):
 		"""
 		Create a nodes_df by iterating through the dataset, adding new genes to 
 		a list of dictionaries. Update the amplicons for existing genes, then 
@@ -61,7 +58,6 @@ class Graph:
 		Parameters: 
 			self (Graph) : Graph object 
 			dataset (tsv file) : AA aggregated results file
-			aliasdict (df) : mapping of RefGene to DepMap gene names
 		Return: 
 			None
 		"""
@@ -87,12 +83,8 @@ class Graph:
 					new_genes[index]['amplicons'].append(currentamp)
 				# otherwise add the gene to new_genes as a new row
 				else:
-					alias = aliasdict.get(gene)
-					if alias is None:
-						TEST_NAMES_NOT_MAPPED_COUNT += 1
 					new_gene = {
 						'label': gene,
-						'alias': '' if alias is None else alias,
 						'oncogene_status': gene in oncogenes,
 						'amplicons': [currentamp]
                 	}
@@ -102,8 +94,6 @@ class Graph:
 		if new_genes:
 			new_gene_df = pd.DataFrame(new_genes)
 			self.nodes_df = pd.concat([self.nodes_df, new_gene_df], ignore_index=True)
-
-		print('No alias found for', TEST_NAMES_NOT_MAPPED_COUNT, 'genes.')
 			
 	def CreateEdges(self):
 		"""
