@@ -28,31 +28,31 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
     if all_edges:
         if oncogenes:
             query = """
-            MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m WHERE m.oncogene = "True")
-            WHERE n.name = $name
-            OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= {mw} and r2.lenunion >= {ms}]-(o WHERE o.oncogene = "True")
-            MATCH (o WHERE o.oncogene = "True")-[r3 WHERE r3.weight >= {mw} and r3.lenunion >= {ms}]-(n)
+            MATCH (n)-[r WHERE r.weight >= {mw} and SIZE(r.union) >= {ms}]-(m WHERE m.oncogene = "True")
+            WHERE n.label = $name
+            OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= {mw} and SIZE(r2.union) >= {ms}]-(o WHERE o.oncogene = "True")
+            MATCH (o WHERE o.oncogene = "True")-[r3 WHERE r3.weight >= {mw} and SIZE(r3.union) >= {ms}]-(n)
             RETURN n, r, m, r2, o
             """.format(mw = min_weight, ms = min_samples)
         else:
             query = """
-            MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
-            WHERE n.name = $name
-            OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= {mw} and r2.lenunion >= {ms}]-(o)
-            MATCH (o)-[r3 WHERE r3.weight >= {mw} and r3.lenunion >= {ms}]-(n)
+            MATCH (n)-[r WHERE r.weight >= {mw} and SIZE(r.union) >= {ms}]-(m)
+            WHERE n.label = $name
+            OPTIONAL MATCH (m)-[r2 WHERE r2.weight >= {mw} and SIZE(r2.nunion) >= {ms}]-(o)
+            MATCH (o)-[r3 WHERE r3.weight >= {mw} and SIZE(r3.union) >= {ms}]-(n)
             RETURN n, r, m, r2, o
             """.format(mw = min_weight, ms = min_samples)
     else:
         if oncogenes:
             query = """
-            MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m WHERE m.oncogene = "True")
-            WHERE n.name = $name
+            MATCH (n)-[r WHERE r.weight >= {mw} and SIZE(r.union) >= {ms}]-(m WHERE m.oncogene = "True")
+            WHERE n.label = $name
             RETURN n, r, m
             """.format(mw = min_weight, ms = min_samples)
         else:
             query = """
-            MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
-            WHERE n.name = $name
+            MATCH (n)-[r WHERE r.weight >= {mw} and SIZE(r.union) >= {ms}]-(m)
+            WHERE n.label = $name
             RETURN n, r, m
             """.format(mw = min_weight, ms = min_samples)
     # print(query)
@@ -65,55 +65,51 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
         # ----------------------------------------------------------------------
         # print(record)
         # source
-        nodes.setdefault(record['n']['name'], 
-                         {'data': {'id': record['n']['id'],
-                                   'name': record['n']['name'],
+        nodes.setdefault(record['n']['label'], 
+                         {'data': {'name': record['n']['label'],
                                    'oncogene': record['n']['oncogene'],
-                                   'samples': record['n']['samples']}})
+                                   'samples': record['n']['features']}})
         # target
-        nodes.setdefault(record['m']['name'], 
-                         {'data': {'id': record['m']['id'],
-                                   'name': record['m']['name'],
+        nodes.setdefault(record['m']['label'], 
+                         {'data': {'name': record['m']['label'],
                                    'oncogene': record['m']['oncogene'],
-                                   'samples': record['m']['samples']}})
+                                   'samples': record['m']['features']}})
         # edge
-        edges.setdefault(record['n']['name'] + ' -- ' + record['m']['name'], 
-                         {'data': {'source': record['n']['id'],
-                                   'target': record['m']['id'],
+        edges.setdefault(record['n']['label'] + ' -- ' + record['m']['label'], 
+                         {'data': {'source': record['n']['label'],
+                                   'target': record['m']['label'],
                                    'weight': record['r']['weight'],
-                                   'leninter': record['r']['leninter'],
+                                   'leninter': len(record['r']['inter']),
                                    'inter': record['r']['inter'],
-                                   'lenunion': record['r']['lenunion'],
+                                   'lenunion': len(record['r']['union']),
                                    'union': record['r']['union'],
-                                   'name': record['n']['name'] + ' -- ' + record['m']['name'],
                                    'interaction': 'interacts with'
                                    }})
         # neighbor nodes/edges
         if all_edges and record.get('r2') and record.get('o'):
-            nodes.setdefault(record['o']['name'], 
+            nodes.setdefault(record['o']['label'], 
                              {'data': {'id': record['o']['id'],
-                                       'name': record['o']['name'],
+                                       'name': record['o']['label'],
                                        'oncogene': record['o']['oncogene'],
-                                       'samples': record['o']['samples']}})
+                                       'samples': record['o']['features']}})
             triple_intersect = [loc for loc in record['r2']['inter'] if loc in set(record['n']['samples'])]
             new_edge_weight = len(triple_intersect) / len(set(record['n']['samples']))
             print(list(nodes.values())[0]['data']["name"], list(nodes.values())[0]['data']["samples"])
-            print(record['m']['name'], record['o']['name'], record['m']['samples'], record['o']['samples'], record['r2']['weight'], new_edge_weight)
+            print(record['m']['label'], record['o']['label'], record['m']['samples'], record['o']['samples'], record['r2']['weight'], new_edge_weight)
 
-            if record['m']['name'] < record['o']['name']:
-                edges.setdefault(record['m']['name'] + ' -- ' + record['o']['name'], 
-                                {'data': {'source': record['m']['id'], 
-                                        'target': record['o']['id'],
+            if record['m']['label'] < record['o']['label']:
+                edges.setdefault(record['m']['label'] + ' -- ' + record['o']['label'], 
+                                {'data': {'source': record['m']['label'], 
+                                        'target': record['o']['label'],
                                         'weight': new_edge_weight,
                                         'leninter': len(triple_intersect),
                                         'inter': triple_intersect,
                                         'lenunion': len(list(nodes.values())[0]['data']["samples"]),
                                         'union': record['r2']['union'],
-                                        'name': record['m']['name'] + ' -- ' + record['o']['name'],
                                         'interaction': 'interacts with'
                                         }})
             else:
-                edges.setdefault(record['o']['name'] + ' -- ' + record['m']['name'], 
+                edges.setdefault(record['o']['label'] + ' -- ' + record['m']['label'], 
                                 {'data': {'source': record['o']['id'], 
                                         'target': record['m']['id'],
                                         'weight': new_edge_weight,
@@ -121,7 +117,6 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
                                         'inter': triple_intersect,
                                         'lenunion': len(list(nodes.values())[0]['data']["samples"]),
                                         'union': record['r2']['union'],
-                                        'name': record['o']['name'] + ' -- ' + record['m']['name'],
                                         'interaction': 'interacts with'
                                         }})
         # ----------------------------------------------------------------------
@@ -176,7 +171,7 @@ def test_fetch_subgraph():
     test_node_name = "CASC15"
     # Create a session and run fetch_subgraph
     with driver.session() as session:
-        nodes, edges = session.execute_read(fetch_subgraph, test_node_name)
+        nodes, edges = session.execute_read(fetch_subgraph, test_node_name, 0.1, 1, False, False)
         # Prepare the output dictionary
         output = {
             'nodes': nodes,
@@ -190,5 +185,5 @@ if __name__ == '__main__':
     app.run(debug=True)
     # # To see json output for test node, uncomment this and comment 'app.run'
     # with app.app_context():  # Create an application context
-    #     test_fetch_subgraph()  # Call this to test fetch_subgraph
+    #    test_fetch_subgraph()  # Call this to test fetch_subgraph
     

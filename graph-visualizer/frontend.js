@@ -27,29 +27,38 @@ document.addEventListener('DOMContentLoaded', function () {
     cytoscape.use( cytoscapePopper(tippyFactory) );
 });
 
-function filterData(data, topN) {
+function filterData(data, topN, queryNode) {
+    const edgesWithQueryNode = data.edges.filter(edge => 
+        edge.data.source ===  queryNode || edge.data.target === queryNode
+    );
+
     // Sort edges by weight in descending order
-    const sortedEdges = data.edges.sort((a, b) => b.data.weight - a.data.weight);
+    const sortedEdges = edgesWithQueryNode.sort((a, b) => b.data.weight - a.data.weight);
   
     // Select the top N edges
     const topEdges = sortedEdges.slice(0, topN);
   
     // Get the set of node IDs referenced in the top edges
-    const nodeIds = new Set();
+    const retainedNodeIds = new Set();
     topEdges.forEach(edge => {
-      nodeIds.add(edge.data.source);
-      nodeIds.add(edge.data.target);
+        retainedNodeIds.add(edge.data.source);
+        retainedNodeIds.add(edge.data.target);
     });
   
-    // Filter nodes to include only those in the nodeIds set
-    const filteredNodes = data.nodes.filter(node => nodeIds.has(node.data.id));
+    // Filter nodes to include only those in the retainedNodeIds set
+    const filteredNodes = data.nodes.filter(node => retainedNodeIds.has(node.data.id));
+
+    // Filter edges to exclude any edge containing removed nodes
+    const filteredEdges = topEdges.filter(edge =>
+        retainedNodeIds.has(edge.data.source) && retainedNodeIds.has(edge.data.target)
+    );
   
     // Return the filtered dataset
     return {
-      edges: topEdges,
-      nodes: filteredNodes
+        edges: filteredEdges,
+        nodes: filteredNodes
     };
-  }
+}
 
 let cy = null
 let nodeID = {};
@@ -97,11 +106,11 @@ async function loadGraph() {
         const data = await response.json();
         console.log(data) 
         total_data = data.nodes.length;
-        const filtered_data = filterData(data, limit)
+        //const filtered_data = filterData(data, limit, inputNode);
         // Initialize Cytoscape with fetched data
         cy = cytoscape({
             container: document.getElementById('cy'),
-            elements: filtered_data,  // Use the data from the server
+            elements: data,  // Use the data from the server
             style: [
                 { selector: 'node', style: { 'background-color': '#A7C6ED', 'label': '' } },
                 { selector: `node[name="${inputNode}"], node.highlighted`, style: {'z-index': 100, 'label': 'data(name)' } }, //, 'border-width': 2, 'border-color': 'black', 'border-style': 'solid' } },
@@ -234,7 +243,8 @@ function createTooltipContent(ele) {
     }
     else {
         let template = document.getElementById('edge-template');
-        template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
+        template.querySelector('#etip-source').textContent = ele.data('source') || 'N/A';
+        template.querySelector('#etip-target').textContent = ele.data('target') || 'N/A';
         template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
         template.querySelector('#etip-frac').textContent = ele.data('leninter') + '/' + ele.data('lenunion');
         template.querySelector('#etip-nsamples').textContent = ele.data('leinter') || 'N/A';

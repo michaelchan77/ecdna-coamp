@@ -2,571 +2,916 @@
     "nodes": [
         {
             "data": {
-                "id": 0,
                 "name": "CASC15",
-                "oncogene": "False"
+                "oncogene": "False",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 1748,
-                "name": "ZC3H7A",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1747,
-                "name": "TXNDC11",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1746,
-                "name": "TVP23A",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1745,
-                "name": "TNP2",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1744,
-                "name": "TNFRSF17",
-                "oncogene": "True"
-            }
-        },
-        {
-            "data": {
-                "id": 1743,
-                "name": "TEKT5",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1742,
-                "name": "SOCS1",
-                "oncogene": "True"
-            }
-        },
-        {
-            "data": {
-                "id": 1741,
-                "name": "SNX29",
-                "oncogene": "True"
-            }
-        },
-        {
-            "data": {
-                "id": 1740,
-                "name": "SNN",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1739,
-                "name": "SHISA9",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1738,
-                "name": "RSL1D1",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1737,
-                "name": "RMI2",
-                "oncogene": "True"
-            }
-        },
-        {
-            "data": {
-                "id": 1736,
-                "name": "PRM3",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1735,
-                "name": "PRM2",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1734,
-                "name": "PRM1",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1733,
-                "name": "NUBP1",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1732,
-                "name": "NPIPB2",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1731,
-                "name": "MBOAT1",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1730,
-                "name": "LITAF",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1729,
-                "name": "ID4",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1728,
                 "name": "GSPT1",
-                "oncogene": "False"
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 1727,
-                "name": "EMP2",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1726,
                 "name": "DEXI",
-                "oncogene": "False"
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 1725,
-                "name": "CPPED1",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1724,
-                "name": "CLEC16A",
-                "oncogene": "False"
-            }
-        },
-        {
-            "data": {
-                "id": 1723,
-                "name": "CIITA",
-                "oncogene": "True"
-            }
-        },
-        {
-            "data": {
-                "id": 1722,
-                "name": "BCAR4",
-                "oncogene": "True"
-            }
-        },
-        {
-            "data": {
-                "id": 6,
                 "name": "SOX4",
-                "oncogene": "True"
+                "oncogene": "True",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 5,
                 "name": "PRL",
-                "oncogene": "False"
+                "oncogene": "False",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 4,
-                "name": "NBAT1",
-                "oncogene": "False"
+                "name": "ZC3H7A",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 3,
-                "name": "HDGFL1",
-                "oncogene": "False"
+                "name": "TEKT5",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 2,
-                "name": "E2F3",
-                "oncogene": "True"
+                "name": "NPIPB2",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         },
         {
             "data": {
-                "id": 1,
+                "name": "RMI2",
+                "oncogene": "True",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "PRM2",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
                 "name": "CDKAL1",
-                "oncogene": "False"
+                "oncogene": "False",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "RSL1D1",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "PRM1",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "LITAF",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "TVP23A",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "BCAR4",
+                "oncogene": "True",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "SHISA9",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "SNX29",
+                "oncogene": "True",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "EMP2",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "CLEC16A",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "TXNDC11",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "SNN",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "PRM3",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "CIITA",
+                "oncogene": "True",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "SOCS1",
+                "oncogene": "True",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "TNP2",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "TNFRSF17",
+                "oncogene": "True",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "CPPED1",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "NUBP1",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "E2F3",
+                "oncogene": "True",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "MBOAT1",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "ID4",
+                "oncogene": "False",
+                "samples": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "HDGFL1",
+                "oncogene": "False",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
+            }
+        },
+        {
+            "data": {
+                "name": "NBAT1",
+                "oncogene": "False",
+                "samples": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ]
             }
         }
     ],
     "edges": [
         {
             "data": {
-                "source": 0,
-                "target": 1748,
+                "source": "CASC15",
+                "target": "GSPT1",
                 "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) ZC3H7A",
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- GSPT1",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 1747,
+                "source": "CASC15",
+                "target": "DEXI",
                 "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) TXNDC11",
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- DEXI",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 1746,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) TVP23A",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1745,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) TNP2",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1744,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) TNFRSF17",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1743,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) TEKT5",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1742,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) SOCS1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1741,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) SNX29",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1740,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) SNN",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1739,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) SHISA9",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1738,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) RSL1D1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1737,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) RMI2",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1736,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) PRM3",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1735,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) PRM2",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1734,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) PRM1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1733,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) NUBP1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1732,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) NPIPB2",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1731,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) MBOAT1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1730,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) LITAF",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1729,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) ID4",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1728,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) GSPT1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1727,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) EMP2",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1726,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) DEXI",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1725,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) CPPED1",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1724,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) CLEC16A",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1723,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) CIITA",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 1722,
-                "weight": 0.5,
-                "samples": 2,
-                "name": "CASC15 (interacts with) BCAR4",
-                "interaction": "interacts with"
-            }
-        },
-        {
-            "data": {
-                "source": 0,
-                "target": 6,
+                "source": "CASC15",
+                "target": "SOX4",
                 "weight": 1.0,
-                "samples": 2,
-                "name": "CASC15 (interacts with) SOX4",
+                "leninter": 2,
+                "inter": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- SOX4",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 5,
+                "source": "CASC15",
+                "target": "PRL",
                 "weight": 1.0,
-                "samples": 2,
-                "name": "CASC15 (interacts with) PRL",
+                "leninter": 2,
+                "inter": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- PRL",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 4,
-                "weight": 1.0,
-                "samples": 2,
-                "name": "CASC15 (interacts with) NBAT1",
+                "source": "CASC15",
+                "target": "ZC3H7A",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- ZC3H7A",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 3,
-                "weight": 1.0,
-                "samples": 2,
-                "name": "CASC15 (interacts with) HDGFL1",
+                "source": "CASC15",
+                "target": "TEKT5",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- TEKT5",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 2,
-                "weight": 1.0,
-                "samples": 2,
-                "name": "CASC15 (interacts with) E2F3",
+                "source": "CASC15",
+                "target": "NPIPB2",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- NPIPB2",
                 "interaction": "interacts with"
             }
         },
         {
             "data": {
-                "source": 0,
-                "target": 1,
+                "source": "CASC15",
+                "target": "RMI2",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- RMI2",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "PRM2",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- PRM2",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "CDKAL1",
                 "weight": 1.0,
-                "samples": 2,
-                "name": "CASC15 (interacts with) CDKAL1",
+                "leninter": 2,
+                "inter": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- CDKAL1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "RSL1D1",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- RSL1D1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "PRM1",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- PRM1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "LITAF",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- LITAF",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "TVP23A",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- TVP23A",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "BCAR4",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- BCAR4",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "SHISA9",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- SHISA9",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "SNX29",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- SNX29",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "EMP2",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- EMP2",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "CLEC16A",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- CLEC16A",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "TXNDC11",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- TXNDC11",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "SNN",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- SNN",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "PRM3",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- PRM3",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "CIITA",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- CIITA",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "SOCS1",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- SOCS1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "TNP2",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- TNP2",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "TNFRSF17",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- TNFRSF17",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "CPPED1",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- CPPED1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "NUBP1",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- NUBP1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "E2F3",
+                "weight": 1.0,
+                "leninter": 2,
+                "inter": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- E2F3",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "MBOAT1",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- MBOAT1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "ID4",
+                "weight": 0.5,
+                "leninter": 1,
+                "inter": [
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- ID4",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "HDGFL1",
+                "weight": 1.0,
+                "leninter": 2,
+                "inter": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- HDGFL1",
+                "interaction": "interacts with"
+            }
+        },
+        {
+            "data": {
+                "source": "CASC15",
+                "target": "NBAT1",
+                "weight": 1.0,
+                "leninter": 2,
+                "inter": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "lenunion": 2,
+                "union": [
+                    "5637_URINARY_TRACT_amplicon1_ecDNA_1",
+                    "HT1376_URINARY_TRACT_amplicon4_ecDNA_1"
+                ],
+                "name": "CASC15 -- NBAT1",
                 "interaction": "interacts with"
             }
         }
