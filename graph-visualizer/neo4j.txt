@@ -1,4 +1,16 @@
-Neo4j Cypher commands
+[Neo4j Cypher Commands 01/18/25]
+
+LOAD CSV WITH HEADERS FROM 'file:///test_nodes.csv' AS row
+CREATE (n:Node { label: row.label, oncogene: row.oncogene_status, features: split(row.features_format, '|')});
+
+CREATE INDEX FOR (n:Node) ON (n.label);
+
+LOAD CSV WITH HEADERS FROM 'file:///test_edges.csv' AS row 
+MATCH (a:Node {label: row.source}), (b:Node {label: row.target})
+MERGE (a)-[:COAMP {weight: toFloat(row.weight), inter: split(row.inter, '|'), union: split(row.union, '|')}]->(b);
+
+--------------------------------------------------------------------------------
+[Archive]
 
 Nodes:
 LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_nodes.csv' AS row
@@ -31,3 +43,4 @@ WHERE r2.weight >= 0.8
 MATCH (o)-[r3]-(n)
 WHERE r3.weight >= 0.8
 RETURN n, r, m, r2, o
+

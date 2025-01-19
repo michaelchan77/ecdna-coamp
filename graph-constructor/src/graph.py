@@ -90,6 +90,11 @@ class Graph:
                 	}
 					new_genes.append(new_gene)
 					gene_index[gene] = len(new_genes) - 1
+
+		# reformat features of new genes
+		for new_gene in new_genes:
+			new_gene['features_format'] = '|'.join(new_gene['amplicons'])
+
 		# concatenate all new genes as rows
 		if new_genes:
 			new_gene_df = pd.DataFrame(new_genes)
@@ -152,8 +157,8 @@ class Graph:
 			'source': [labels[i] for i in src_filtered],
 			'target': [labels[j] for j in tgt_filtered],
 			'weight': weights,
-			'inter': inters_filtered,
-			'union': unions_filtered
+			'inter': ['|'.join(inter) for inter in inters_filtered],
+			'union': ['|'.join(union) for union in unions_filtered]
 		})
 
 	# get functions
