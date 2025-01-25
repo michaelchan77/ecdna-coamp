@@ -12,30 +12,30 @@ MERGE (a)-[:COAMP {weight: toFloat(row.weight), inter: split(row.inter, '|'), un
 --------------------------------------------------------------------------------
 [Archive]
 
-Nodes:
+Old neo4j_ccle_nodes:
+---------------------
 LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_nodes.csv' AS row
-CREATE (n:Node { id: toInteger(row.id)-1, name: row.label, oncogene: row.oncogene_status});
+CREATE (n:Node { id: toInteger(row.id)-1, name: row.label, oncogene: row.oncogene_status, samples: split(row.samples, '|')});
 
-Edges:
+Old neo4j_ccle_edges:
+---------------------
 CREATE INDEX FOR (n:Node) ON (n.id);
-# Kyra: SHOW INDEXES
-# Kyra: DROP INDEX index_name (for all indices)
-# Kyra: CREATE INDEX index_by_id FOR (n:Node) ON (n.id);
 LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
 MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
-MERGE (a)-[:COAMP {weight: toFloat(row.weight), samples: toInteger(row.lenunion)}]->(b);
+MERGE (a)-[:COAMP {weight: toFloat(row.weight), lenunion: toInteger(row.lenunion), union: split(row.union, '|'), leninter: toInteger(row.leninter), inter: split(row.inter, '|')}]->(b);
+
+Kyra index:
+-----------
+SHOW INDEXES
+DROP INDEX index_name (for all indices)
+CREATE INDEX index_by_id FOR (n:Node) ON (n.id);
 
 Password:
-- ALTER USER neo4j SET PASSWORD 'your_new_password';
-
-
-new edge import:
-LOAD CSV WITH HEADERS FROM 'file:///neo4j_ccle_edges.csv' AS row 
-MATCH (a:Node {id: toInteger(row.source)-1}), (b:Node {id: toInteger(row.target)-1})
-MERGE (a)-[:COAMP {weight: toFloat(row.weight), lenunion: toInteger(row.lenunion), union: split(row.union, '|')}]->(b);
-
+---------
+ALTER USER neo4j SET PASSWORD 'your_new_password';
 
 Load edges between neighbors:
+-----------------------------
 MATCH (n {name: "ERBB2"})-[r]-(m)
 WHERE r.weight >= 0.8
 OPTIONAL MATCH (m)-[r2]-(o)
