@@ -6,6 +6,7 @@ import pandas as pd
 from graph import Graph
 
 import json
+import time
 
 app = Flask(__name__)
 
@@ -36,23 +37,30 @@ def load_graph():
     
     # load new graph
     with driver.session() as session:
-        # add nodes (update query to reflect neo4j.txt)
+        start = time.process_time()
+        # add nodes
         session.run(
             """
-            UNWIND $nodes AS node
-            CREATE (n:Node {id: node.id, name: node.name, oncogene: node.oncogene, samples: node.samples})
+            UNWIND $nodes AS row
+            CREATE (n:Node {label: row.label, oncogene: row.oncogene_status, cell_lines: row.cell_lines})
             """,
             nodes=nodes
         )
-        # add edges (update query to reflect neo4j.txt)
+        # add index on label (can be done once)
+        session.run("""
+            CREATE INDEX IF NOT EXISTS FOR (n:Node) ON (n.label)
+        """)
+        # add edges
         session.run(
             """
-            UNWIND $edges AS edge
-            MATCH (source:Node {id: edge.source}), (target:Node {id: edge.target})
-            CREATE (source)-[:CONNECTED {weight: edge.weight, inter: edge.inter, union: edge.union}]->(target)
+            UNWIND $edges AS row
+            MATCH (a:Node {label: row.source}), (b:Node {label: row.target})
+            MERGE (a)-[:COAMP {weight: toFloat(row.weight), inter: row.inter, union: row.union}]->(b)
             """,
             edges=edges
         )
+        end = time.process_time()
+        print('Time:', end-start)
     return jsonify({"message": "Graph loaded successfully"}), 200
 
 

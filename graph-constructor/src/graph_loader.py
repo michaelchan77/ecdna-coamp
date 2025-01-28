@@ -36,8 +36,8 @@ def main():
     print("Nodes:", graph.NumNodes())   # 3320
     print(" Edges:", graph.NumEdges())  # 118033
 
-    graph.Nodes().to_csv('test_nodes.csv', index=False)  
-    graph.Edges().to_csv('test_edges.csv', index=False)  
+    graph.Nodes_df().to_csv('test_nodes.csv', index=False)  
+    graph.Edges_df().to_csv('test_edges.csv', index=False)  
 
     end = time.process_time()
     print("Export graph:", end - start, " seconds")
