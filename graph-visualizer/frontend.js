@@ -74,7 +74,9 @@ async function loadGraph() {
     const sampleMinimum = parseFloat($('#numSamples').val());
     const oncogenesChecked = $('#oncogenes_only').is(':checked');
     const limit = parseInt($('#limit').val());
-    const allEdgesChecked = $('#all_edges').is(':checked');
+    const allEdgesChecked = false;
+    // const allEdgesChecked = $('#all_edges').is(':checked');
+
     // print vars
     document.getElementById('storedText').textContent = String([minWeight, sampleMinimum, oncogenesChecked, allEdgesChecked]);
     
