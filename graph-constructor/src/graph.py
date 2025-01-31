@@ -24,20 +24,7 @@ class Graph:
 			self.loc_type = loc_type
 			self.nodes = []
 			self.edges = []
-			# self.nodes_df = pd.DataFrame({
-			# 	"label": [],								# str
-			# 	"oncogene_status": pd.Series(dtype=bool),	# bool
-			# 	"features": pd.Series(dtype=object),		# list
-			# 	"cell_lines": pd.Series(dtype=object),		# list	
-			# 	"tissues": pd.Series(dtype=object)			# list
-			# })
-			# self.edges_df = pd.DataFrame({
-			# 	"source": [],  								# int
-			# 	"target": [],								# int
-			# 	"weight": [],								# float
-			# 	"inter": pd.Series(dtype=object),			# list
-			# 	"union": pd.Series(dtype=object)			# list
-			# })
+
 			self.CreateNodes(dataset)
 			self.CreateEdges()
 
@@ -48,7 +35,7 @@ class Graph:
 		Return: 
 			list: ["A", "B", "C"]
 		"""
-		pattern = r"['\"]?([\w-]+)['\"]?"
+		pattern = r"['\"]?([\w./-]+)['\"]?"
 		genelist = re.findall(pattern, input)
 		return genelist
 
@@ -67,7 +54,7 @@ class Graph:
 		"""
 		# dictionary for fast lookups of gene labels
 		gene_index = {}
-	
+
 		# get subset of ecDNA features
 		if self.loc_type == "feature":
 			all_features = dataset[dataset['Classification'] == self.amp_type]
@@ -88,7 +75,7 @@ class Graph:
 				else:
 					node_info = {
 						'label': gene,
-						'oncogene_status': gene in oncogenes,
+						'oncogene': gene in oncogenes,
 						'features': [feature],
 						'cell_lines': [cell_line]
                 	}

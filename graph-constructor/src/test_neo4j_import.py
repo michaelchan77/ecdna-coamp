@@ -25,24 +25,31 @@ def load_graph():
     driver = get_driver()
 
     # construct graph
+    start = time.process_time()
+
     amp_repo_datasets_dir = "/Users/michael/Downloads/amplicon_repo_datasets/"
     ccle = pd.read_csv(amp_repo_datasets_dir + "ccle_aggregated_results.csv")
     graph = Graph(ccle)
     nodes = graph.Nodes()
     edges = graph.Edges()
 
+    end = time.process_time()
+    print('Construct Graph:', end-start, 's')
+
     # drop existing graph (change to drop if required)
     with driver.session() as session:
         session.run("MATCH (n) DETACH DELETE n")
-    
+
     # load new graph
+    start = time.process_time()
+
     with driver.session() as session:
-        start = time.process_time()
+        
         # add nodes
         session.run(
             """
             UNWIND $nodes AS row
-            CREATE (n:Node {label: row.label, oncogene: row.oncogene_status, cell_lines: row.cell_lines})
+            CREATE (n:Node {label: row.label, oncogene: row.oncogene, features: row.features, cell_lines: row.cell_lines})
             """,
             nodes=nodes
         )
@@ -59,8 +66,10 @@ def load_graph():
             """,
             edges=edges
         )
-        end = time.process_time()
-        print('Time:', end-start)
+
+    end = time.process_time()
+    print('Upload to neo4j:', end-start, 's')
+
     return jsonify({"message": "Graph loaded successfully"}), 200
 
 
