@@ -143,7 +143,22 @@
         });
 
         // Load in new graph
-        $('#loadButton').on('click', loadGraph);
+        $('#loadButton').on('click', async function() {
+            const button = $(this);  // Reference to the button
+            const originalText = button.text();  // Store original button text
+
+            button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Loading...');
+
+            try {
+                await loadGraph();  // Wait for loadGraph to complete
+                button.text(originalText)
+            } catch (error) {
+                console.error("Error loading graph:", error);
+                button.text("Retry");  // Indicate failure
+            }
+
+            button.prop('disabled', false);  // Re-enable button
+        });
     </script>
 </body>
 </html>

@@ -163,6 +163,7 @@ async function fetchSubgraph() {
 }
 
 async function loadGraph(dataset = "ccle_aggregated_results.csv") {
+    const startTime = performance.now();  // Start timer
     try {
         const response = await fetch("http://127.0.0.1:5000/loadGraph", {  
             method: "POST",
@@ -175,10 +176,12 @@ async function loadGraph(dataset = "ccle_aggregated_results.csv") {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();  // Parse JSON response
-        console.log("Response from backend:", data.message);
-        
+
+        const endTime = performance.now();  // End timer
+        const elapsedTime = ((endTime - startTime) / 1000).toFixed(2);
+
         // Show message on UI
-        alert(data.message);
+        alert(`${data.message} in ${elapsedTime}s`);
         
     } catch (error) {
         console.error("Error loading graph:", error);
