@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request, g
 from flask_cors import CORS
 from neo4j import GraphDatabase
-
+from graph_construct import Graph
+import pandas as pd
 import json
 import time
 
@@ -201,15 +202,10 @@ def get_node_data():
     # Create a session and run fetch_subgraph
     with driver.session() as session:
         nodes, edges = session.execute_read(fetch_subgraph, node_id, min_weight, min_samples, oncogenes, all_edges)
-        print()
-        # print("NODES:")
-        # print(nodes)
-        print("LENGTH NODES", len(nodes))
-        print()
-        # print("EDGES:")
-        # print(edges)
-        print("LENGTH EDGES", len(edges))
-        print()
+
+        # print(f"\nNodes:\n{nodes}\n\nEdges:\n{edges}")
+        print(f"\nNumber of nodes: {len(nodes)}\nNumber of edges: {len(edges)}\n")
+
         if nodes:
             return jsonify({
                 'nodes': nodes,
@@ -217,7 +213,53 @@ def get_node_data():
             })
         else:
             return jsonify({"error": "Node not found"}), 404
-        
+
+@app.route('/loadGraph', methods=['POST'])
+def load_graph(dataset="ccle_aggregated_results.csv"):
+    driver = get_driver()
+
+    # construct graph
+    START_TIME = time.process_time()
+
+    DATA_DIR = "/Users/michael/Downloads/amplicon_repo_datasets/"
+    results_df = pd.read_csv(DATA_DIR + dataset)
+    graph = Graph(results_df)
+    nodes = graph.Nodes()
+    edges = graph.Edges()
+
+    CONSTRUCT_TIME = time.process_time()
+
+    # drop previous graph
+    with driver.session() as session:
+        session.run("MATCH (n) DETACH DELETE n")
+    # import new graph
+    with driver.session() as session:
+        # add nodes
+        session.run("""
+            UNWIND $nodes AS row
+            CREATE (n:Node {label: row.label, oncogene: row.oncogene, features: row.features, cell_lines: row.cell_lines})
+            """, nodes=nodes
+        )
+        # add index on label (can be done once)
+        session.run("""
+            CREATE INDEX IF NOT EXISTS FOR (n:Node) ON (n.label)
+            """
+        )
+        # add edges
+        session.run("""
+            UNWIND $edges AS row
+            MATCH (a:Node {label: row.source}), (b:Node {label: row.target})
+            MERGE (a)-[:COAMP {weight: toFloat(row.weight), inter: row.inter, union: row.union}]->(b)
+            """, edges=edges
+        )
+    IMPORT_TIME = time.process_time()
+
+    print(f'Construct graph: {CONSTRUCT_TIME-START_TIME} s')
+    print(f'Import to neo4j: {IMPORT_TIME-CONSTRUCT_TIME} s')
+
+    return jsonify({"message": "Graph loaded successfully"}), 200
+
+
 # Ensure proper resource cleanup
 @app.teardown_appcontext
 def close_driver(exception=None):
@@ -248,53 +290,3 @@ if __name__ == '__main__':
     # # To see json output for test node, uncomment this and comment 'app.run'
     # with app.app_context():  # Create an application context
     #     test_fetch_subgraph()  # Call this to test fetch_subgraph
-    
-
-# # ChatGPT example load function to support dynamic user upload of datasets into Neo4j on site
-# # -------
-
-# from ../graph-constructor/src/graph import Graph
-
-# @app.route('/loadGraph', methods=['POST'])
-# def load_graph():
-#     # in front end: project selector ui, function to iterate through json files 
-#     # of selected projects and pass along all runs (?)
-#     # to this function
-
-#     driver = get_driver()
-
-#     # extract relevant info from frontend request
-#     project_info_as_jsons = request.json()
-
-#     # construct graph
-#     graph = Graph(project_info_as_jsons) # currently takes in aggregated results dataframe, so will need to rework CreateNodes()
-#     nodes = graph.Nodes()
-#     edges = graph.Edges()
-
-#     if not nodes or not edges:
-#         return jsonify({"error": "Nodes and edges data are required"}), 400
-
-#     # drop existing graph (change to drop if required)
-#     with driver.session() as session:
-#         session.run("MATCH (n) DETACH DELETE n")
-    
-#     # load new graph
-#     with driver.session() as session:
-#         # add nodes (update query to reflect neo4j.txt)
-#         session.run(
-#             """
-#             UNWIND $nodes AS node
-#             CREATE (n:Node {id: node.id, name: node.name, oncogene: node.oncogene, samples: node.samples})
-#             """,
-#             nodes=nodes
-#         )
-#         # add edges (update query to reflect neo4j.txt)
-#         session.run(
-#             """
-#             UNWIND $edges AS edge
-#             MATCH (source:Node {id: edge.source}), (target:Node {id: edge.target})
-#             CREATE (source)-[:CONNECTED {weight: edge.weight, inter: edge.inter, union: edge.union}]->(target)
-#             """,
-#             edges=edges
-#         )
-#     return jsonify({"message": "Graph loaded successfully"}), 200

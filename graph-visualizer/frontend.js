@@ -1,63 +1,12 @@
-function tippyFactory(ref, content, theme){
-    // Since tippy constructor requires DOM element/elements, create a placeholder
-    var dummyDomEle = document.createElement('div');
- 
-    var tip = tippy( dummyDomEle, {
-        getReferenceClientRect: ref.getBoundingClientRect,
-        trigger: 'manual', // mandatory
-        // dom element inside the tippy:
-        content: content,
-        // preferences:
-        arrow: false,
-        placement: 'bottom-end',
-        hideOnClick: false,
-        sticky: "reference",
-        theme: theme,
-        allowHTML: true,
- 
-        // if interactive:
-        interactive: true,
-        appendTo: document.body
-    } );
- 
-    return tip;
- }
-
-document.addEventListener('DOMContentLoaded', function () {
-    cytoscape.use( cytoscapePopper(tippyFactory) );
-});
-
-function filterData(data, topN) {
-    // Sort edges by weight in descending order
-    const sortedEdges = data.edges.sort((a, b) => b.data.weight - a.data.weight);
-  
-    // Select the top N edges
-    const topEdges = sortedEdges.slice(0, topN);
-  
-    // Get the set of node IDs referenced in the top edges
-    const nodeIds = new Set();
-    topEdges.forEach(edge => {
-      nodeIds.add(edge.data.source);
-      nodeIds.add(edge.data.target);
-    });
-  
-    // Filter nodes to include only those in the nodeIds set
-    const filteredNodes = data.nodes.filter(node => nodeIds.has(node.data.id));
-  
-    // Return the filtered dataset
-    return {
-      edges: topEdges,
-      nodes: filteredNodes
-    };
-  }
-
+// Global variables
 let cy = null
 let nodeID = {};
 let allTooltips = {};
 let inputNode = null
 let total_data = 0;
 
-async function loadGraph() {
+// ---------------------------- Backend interaction ----------------------------
+async function fetchSubgraph() {
     console.log("Load graph pressed");
 
     removeAllTooltips();
@@ -213,16 +162,57 @@ async function loadGraph() {
 
 }
 
-// Select the button and slider elements
-const button = document.getElementById("storeButton");
+async function loadGraph(dataset = "ccle_aggregated_results.csv") {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/loadGraph", {  
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ dataset: dataset })  // Send dataset as JSON
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();  // Parse JSON response
+        console.log("Response from backend:", data.message);
+        
+        // Show message on UI
+        alert(data.message);
+        
+    } catch (error) {
+        console.error("Error loading graph:", error);
+    }
+}
 
-const slider = document.getElementById('limit');
-const tooltip = document.getElementById('sliderTooltip');
+// ----------------------------- Tooltip functions -----------------------------
+function tippyFactory(ref, content, theme) {
+    // tippy constructor requires DOM element/elements so create a placeholder
+    var dummyDomEle = document.createElement('div');
+ 
+    var tip = tippy( dummyDomEle, {
+        getReferenceClientRect: ref.getBoundingClientRect,
+        trigger: 'manual', // mandatory
+        // dom element inside the tippy:
+        content: content,
+        // preferences:
+        arrow: false,
+        placement: 'bottom-end',
+        hideOnClick: false,
+        sticky: "reference",
+        theme: theme,
+        allowHTML: true,
+ 
+        // if interactive:
+        interactive: true,
+        appendTo: document.body
+    } );
+ 
+    return tip;
+ }
 
-slider.addEventListener('input', function () {
-    const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-    tooltip.style.left = `calc(${value}% - ${tooltip.offsetWidth / 2}px)`;
-    tooltip.textContent = slider.value; 
+document.addEventListener('DOMContentLoaded', function () {
+    cytoscape.use( cytoscapePopper(tippyFactory) );
 });
 
 // Set tooltip content
@@ -246,7 +236,7 @@ function createTooltipContent(ele) {
         content = template.innerHTML;
     }
     return content;
-  }
+}
 
 function makeTips(cy) {
     if (!cy) { return }
@@ -279,6 +269,7 @@ function removeAllTooltips() {
     allTooltips = {}; // Reset the object
 }
 
+// ----------------------------- Cytoscape layout ------------------------------
 function layout(cy, input) {
     if (!cy) { return }
     const radius = 40;
@@ -316,6 +307,7 @@ function layout(cy, input) {
       }).run();
 }
 
+// ------------------------------ Filter helpers -------------------------------
 function updateSampleMax(cy) {
     if (cy) {
         maxSamples = 1;
@@ -338,6 +330,44 @@ function updateLimitMax(cy) {
     }
 }
 
+// TODO: What does this do?
+// Select the button and slider elements
+const button = document.getElementById("storeButton");
+
+const slider = document.getElementById('limit');
+const tooltip = document.getElementById('sliderTooltip');
+
+slider.addEventListener('input', function () {
+    const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+    tooltip.style.left = `calc(${value}% - ${tooltip.offsetWidth / 2}px)`;
+    tooltip.textContent = slider.value; 
+});
+
+function filterData(data, topN) {
+    // Sort edges by weight in descending order
+    const sortedEdges = data.edges.sort((a, b) => b.data.weight - a.data.weight);
+  
+    // Select the top N edges
+    const topEdges = sortedEdges.slice(0, topN);
+  
+    // Get the set of node IDs referenced in the top edges
+    const nodeIds = new Set();
+    topEdges.forEach(edge => {
+      nodeIds.add(edge.data.source);
+      nodeIds.add(edge.data.target);
+    });
+  
+    // Filter nodes to include only those in the nodeIds set
+    const filteredNodes = data.nodes.filter(node => nodeIds.has(node.data.id));
+  
+    // Return the filtered dataset
+    return {
+      edges: topEdges,
+      nodes: filteredNodes
+    };
+}
+
+// ---------------------------- Table and Download -----------------------------
 // Function to sort the table when clicking on column headers
 function sortTable(columnIndex) {
     const table = document.getElementById('data-table');
