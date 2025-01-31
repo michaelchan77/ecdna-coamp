@@ -3,6 +3,7 @@ from flask_cors import CORS
 from neo4j import GraphDatabase
 
 import json
+import time
 
 app = Flask(__name__)
 
@@ -25,6 +26,7 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
     print(oncogenes)
     print(all_edges)
     print()
+    # ------------------------------- not active -------------------------------
     if all_edges:
         if oncogenes:
             query = """
@@ -42,94 +44,149 @@ def fetch_subgraph(driver, name, min_weight, min_samples, oncogenes, all_edges):
             MATCH (o)-[r3 WHERE r3.weight >= {mw} and r3.lenunion >= {ms}]-(n)
             RETURN n, r, m, r2, o
             """.format(mw = min_weight, ms = min_samples)
+    # --------------------------------------------------------------------------
     else:
         if oncogenes:
             query = """
+            MATCH (n)-[r WHERE r.weight >= {mw} and SIZE(r.union) >= {ms}]-(m WHERE m.oncogene = 1)
+            WHERE n.label = $name
+            RETURN n, r, m
+            """.format(mw = min_weight, ms = min_samples)
+            
+            prev_query = """
             MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m WHERE m.oncogene = "True")
             WHERE n.name = $name
             RETURN n, r, m
             """.format(mw = min_weight, ms = min_samples)
         else:
             query = """
+            MATCH (n)-[r WHERE r.weight >= {mw} and SIZE(r.union) >= {ms}]-(m)
+            WHERE n.label = $name
+            RETURN n, r, m
+            """.format(mw = min_weight, ms = min_samples)
+
+            prev_query = """
             MATCH (n)-[r WHERE r.weight >= {mw} and r.lenunion >= {ms}]-(m)
             WHERE n.name = $name
             RETURN n, r, m
             """.format(mw = min_weight, ms = min_samples)
     # print(query)
+    query_start = time.process_time() # time
     result = driver.run(query, name=name)
+    query_end = time.process_time() # time
+    print("Query runtime: ", query_end - query_start, " seconds") # time
+    
     nodes = {}
     edges = {}
     # print("DISPLAY RECORDS")
     # print()
+    record_start = time.process_time() # time
+    record_counter = 0
+
     for record in result:
-        # ----------------------------------------------------------------------
-        # print(record)
+        record_counter += 1
         # source
-        nodes.setdefault(record['n']['name'], 
-                         {'data': {'id': record['n']['id'],
-                                   'name': record['n']['name'],
+        nodes.setdefault(record['n']['label'], 
+                         {'data': {'id': record['n']['label'],
+                                   'label': record['n']['label'],
                                    'oncogene': record['n']['oncogene'],
-                                   'samples': record['n']['samples']}})
+                                   'features': record['n']['features'],
+                                   'cell_lines': record['n']['cell_lines']}})
         # target
-        nodes.setdefault(record['m']['name'], 
-                         {'data': {'id': record['m']['id'],
-                                   'name': record['m']['name'],
+        nodes.setdefault(record['m']['label'], 
+                         {'data': {'id': record['m']['label'],
+                                   'label': record['m']['label'],
                                    'oncogene': record['m']['oncogene'],
-                                   'samples': record['m']['samples']}})
+                                   'features': record['m']['features'],
+                                   'cell_lines': record['m']['cell_lines']}})
         # edge
-        edges.setdefault(record['n']['name'] + ' -- ' + record['m']['name'], 
-                         {'data': {'source': record['n']['id'],
-                                   'target': record['m']['id'],
+        edgelabel = f"{record['n']['label']} -- {record['m']['label']}"
+        edges.setdefault(edgelabel, 
+                         {'data': {'id': edgelabel,
+                                   'label': edgelabel,
+                                   'source': record['n']['label'],
+                                   'target': record['m']['label'],
                                    'weight': record['r']['weight'],
-                                   'leninter': record['r']['leninter'],
+                                   'leninter': len(record['r']['inter']),
                                    'inter': record['r']['inter'],
-                                   'lenunion': record['r']['lenunion'],
+                                   'lenunion': len(record['r']['union']),
                                    'union': record['r']['union'],
-                                   'name': record['n']['name'] + ' -- ' + record['m']['name'],
                                    'interaction': 'interacts with'
                                    }})
-        # neighbor nodes/edges
-        if all_edges and record.get('r2') and record.get('o'):
-            nodes.setdefault(record['o']['name'], 
-                             {'data': {'id': record['o']['id'],
-                                       'name': record['o']['name'],
-                                       'oncogene': record['o']['oncogene'],
-                                       'samples': record['o']['samples']}})
-            triple_intersect = [loc for loc in record['r2']['inter'] if loc in set(record['n']['samples'])]
-            new_edge_weight = len(triple_intersect) / len(set(record['n']['samples']))
-            print(list(nodes.values())[0]['data']["name"], list(nodes.values())[0]['data']["samples"])
-            print(record['m']['name'], record['o']['name'], record['m']['samples'], record['o']['samples'], record['r2']['weight'], new_edge_weight)
+        
+    # for record in result:
+    #     # record_counter += 1
+    #     # ----------------------------------------------------------------------
+    #     # print(record)
+    #     # source
+    #     nodes.setdefault(record['n']['name'], 
+    #                      {'data': {'id': record['n']['id'],
+    #                                'name': record['n']['name'],
+    #                                'oncogene': record['n']['oncogene'],
+    #                                'samples': record['n']['samples']}})
+    #     # target
+    #     nodes.setdefault(record['m']['name'], 
+    #                      {'data': {'id': record['m']['id'],
+    #                                'name': record['m']['name'],
+    #                                'oncogene': record['m']['oncogene'],
+    #                                'samples': record['m']['samples']}})
+    #     # edge
+    #     edges.setdefault(record['n']['name'] + ' -- ' + record['m']['name'], 
+    #                      {'data': {'source': record['n']['id'],
+    #                                'target': record['m']['id'],
+    #                                'weight': record['r']['weight'],
+    #                                'leninter': record['r']['leninter'],
+    #                                'inter': record['r']['inter'],
+    #                                'lenunion': record['r']['lenunion'],
+    #                                'union': record['r']['union'],
+    #                                'name': record['n']['name'] + ' -- ' + record['m']['name'],
+    #                                'interaction': 'interacts with'
+    #                                }})
+    #     # neighbor nodes/edges
+    #     if all_edges and record.get('r2') and record.get('o'):
+    #         nodes.setdefault(record['o']['name'], 
+    #                          {'data': {'id': record['o']['id'],
+    #                                    'name': record['o']['name'],
+    #                                    'oncogene': record['o']['oncogene'],
+    #                                    'samples': record['o']['samples']}})
+    #         triple_intersect = [loc for loc in record['r2']['inter'] if loc in set(record['n']['samples'])]
+    #         new_edge_weight = len(triple_intersect) / len(set(record['n']['samples']))
+    #         # print(list(nodes.values())[0]['data']["name"], list(nodes.values())[0]['data']["samples"])
+    #         # print(record['m']['name'], record['o']['name'], record['m']['samples'], record['o']['samples'], record['r2']['weight'], new_edge_weight)
 
-            if record['m']['name'] < record['o']['name']:
-                edges.setdefault(record['m']['name'] + ' -- ' + record['o']['name'], 
-                                {'data': {'source': record['m']['id'], 
-                                        'target': record['o']['id'],
-                                        'weight': new_edge_weight,
-                                        'leninter': len(triple_intersect),
-                                        'inter': triple_intersect,
-                                        'lenunion': len(list(nodes.values())[0]['data']["samples"]),
-                                        'union': record['r2']['union'],
-                                        'name': record['m']['name'] + ' -- ' + record['o']['name'],
-                                        'interaction': 'interacts with'
-                                        }})
-            else:
-                edges.setdefault(record['o']['name'] + ' -- ' + record['m']['name'], 
-                                {'data': {'source': record['o']['id'], 
-                                        'target': record['m']['id'],
-                                        'weight': new_edge_weight,
-                                        'leninter': len(triple_intersect),
-                                        'inter': triple_intersect,
-                                        'lenunion': len(list(nodes.values())[0]['data']["samples"]),
-                                        'union': record['r2']['union'],
-                                        'name': record['o']['name'] + ' -- ' + record['m']['name'],
-                                        'interaction': 'interacts with'
-                                        }})
+    #         if record['m']['name'] < record['o']['name']:
+    #             edges.setdefault(record['m']['name'] + ' -- ' + record['o']['name'], 
+    #                             {'data': {'source': record['m']['id'], 
+    #                                     'target': record['o']['id'],
+    #                                     'weight': new_edge_weight,
+    #                                     'leninter': len(triple_intersect),
+    #                                     'inter': triple_intersect,
+    #                                     'lenunion': len(list(nodes.values())[0]['data']["samples"]),
+    #                                     'union': record['r2']['union'],
+    #                                     'name': record['m']['name'] + ' -- ' + record['o']['name'],
+    #                                     'interaction': 'interacts with'
+    #                                     }})
+    #         else:
+    #             edges.setdefault(record['o']['name'] + ' -- ' + record['m']['name'], 
+    #                             {'data': {'source': record['o']['id'], 
+    #                                     'target': record['m']['id'],
+    #                                     'weight': new_edge_weight,
+    #                                     'leninter': len(triple_intersect),
+    #                                     'inter': triple_intersect,
+    #                                     'lenunion': len(list(nodes.values())[0]['data']["samples"]),
+    #                                     'union': record['r2']['union'],
+    #                                     'name': record['o']['name'] + ' -- ' + record['m']['name'],
+    #                                     'interaction': 'interacts with'
+    #                                     }})
         # ----------------------------------------------------------------------
         #print()
         #print("CURRENT:")
-        #print(nodes)
-        #print(edges)
+        print(nodes)
+        print(edges)
         #print()
+    record_end = time.process_time() # time
+    print("Record parse runtime: ", record_end - record_start, " seconds") # time
+    print("Number of records: ", record_counter)
     return list(nodes.values()), list(edges.values())
 
 @app.route('/getNodeData', methods=['GET'])
@@ -145,12 +202,12 @@ def get_node_data():
     with driver.session() as session:
         nodes, edges = session.execute_read(fetch_subgraph, node_id, min_weight, min_samples, oncogenes, all_edges)
         print()
-        print("NODES:")
-        print(nodes)
+        # print("NODES:")
+        # print(nodes)
         print("LENGTH NODES", len(nodes))
         print()
-        print("EDGES:")
-        print(edges)
+        # print("EDGES:")
+        # print(edges)
         print("LENGTH EDGES", len(edges))
         print()
         if nodes:
@@ -176,14 +233,14 @@ def test_fetch_subgraph():
     test_node_name = "CASC15"
     # Create a session and run fetch_subgraph
     with driver.session() as session:
-        nodes, edges = session.execute_read(fetch_subgraph, test_node_name)
+        nodes, edges = session.execute_read(fetch_subgraph, test_node_name, 0.1, 1, False, False)
         # Prepare the output dictionary
         output = {
             'nodes': nodes,
             'edges': edges
         }
         # Write the output to a file
-        with open('subgraph_output.json', 'w') as outfile:
+        with open(f'{test_node_name}_output.json', 'w') as outfile:
             json.dump(output, outfile, indent=4)
 
 if __name__ == '__main__':

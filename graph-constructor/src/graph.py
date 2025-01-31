@@ -75,7 +75,7 @@ class Graph:
 				else:
 					node_info = {
 						'label': gene,
-						'oncogene': gene in oncogenes,
+						'oncogene': str(gene in oncogenes),
 						'features': [feature],
 						'cell_lines': [cell_line]
                 	}

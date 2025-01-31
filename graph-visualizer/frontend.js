@@ -97,28 +97,29 @@ async function loadGraph() {
         }
 
         const data = await response.json();
-        console.log(data) 
         total_data = data.nodes.length;
-        const filtered_data = filterData(data, limit)
+        console.log("hello")
+        // const filtered_data = filterData(data, limit)
         // Initialize Cytoscape with fetched data
         cy = cytoscape({
             container: document.getElementById('cy'),
-            elements: filtered_data,  // Use the data from the server
+            elements: data,  // Use the data from the server
             style: [
                 { selector: 'node', style: { 'background-color': '#A7C6ED', 'label': '' } },
-                { selector: `node[name="${inputNode}"], node.highlighted`, style: {'z-index': 100, 'label': 'data(name)' } }, //, 'border-width': 2, 'border-color': 'black', 'border-style': 'solid' } },
-                { selector: `node[oncogene="True"]`, style: { 'background-color': '#ff4757', 'z-index': 10, 'label': 'data(name)' } },
+                { selector: `node[label="${inputNode}"], node.highlighted`, style: {'z-index': 100, 'label': 'data(label)' } }, //, 'border-width': 2, 'border-color': 'black', 'border-style': 'solid' } },
+                { selector: `node[oncogene="True"]`, style: { 'background-color': '#ff4757', 'z-index': 10, 'label': 'data(label)' } },
                 { selector: 'edge', style: { 'width': 2, 'line-color': '#ccc' } },
                 { selector: '.highlighted', style: {'z-index': 100, 'background-color': '#ffd500', 'line-color': '#ffd500' } }
             ]
         });
+        
 
         // Dictionary to access node ids by name
         cy.nodes().forEach(node => {
-            nodeID[node.data('name')] = "#"+node.id();
+            nodeID[node.data('label')] = "#"+node.id();
         });
         console.log('Number of nodes:', Object.keys(nodeID).length);
-        console.log(nodeID[inputNode] + ': ' + cy.$(nodeID[inputNode]).data('name'));
+        console.log(nodeID[inputNode] + ': ' + cy.$(nodeID[inputNode]).data('label'));
         
         // Update sample slider max
         updateSampleMax(cy);
@@ -142,7 +143,7 @@ async function loadGraph() {
             rownumber_element.textContent = rownumber;
 
             const cellName = document.createElement('td');
-            const geneName = node.data('name');
+            const geneName = node.data('label');
             const link = document.createElement('a');
             
             // Set the href attribute to the desired URL (customize this URL as needed)
@@ -229,17 +230,18 @@ function createTooltipContent(ele) {
     let content = '';
     if (ele.isNode()) {
         let template = document.getElementById('node-template');
-        template.querySelector('#ntip-name').textContent = ele.data('name') || 'N/A';
+        template.querySelector('#ntip-name').textContent = ele.data('label') || 'N/A';
         template.querySelector('#ntip-oncogene').textContent = ele.data('oncogene') || 'N/A';
-        template.querySelector('#ntip-nsamples').textContent = ele.data('samples').length || 'N/A';
+        template.querySelector('#ntip-nsamples').textContent = ele.data('features').length || 'N/A';
+        template.querySelector('#ntip-samples').textContent = ele.data('features').join(', ') || 'N/A';
         content = template.innerHTML;
     }
     else {
         let template = document.getElementById('edge-template');
-        template.querySelector('#etip-name').textContent = ele.data('name') || 'N/A';
+        template.querySelector('#etip-name').textContent = ele.data('label') || 'N/A';
         template.querySelector('#etip-weight').textContent = ele.data('weight').toFixed(3) || 'N/A';
         template.querySelector('#etip-frac').textContent = ele.data('leninter') + '/' + ele.data('lenunion');
-        template.querySelector('#etip-nsamples').textContent = ele.data('leinter') || 'N/A';
+        template.querySelector('#etip-nsamples').textContent = ele.data('leninter') || 'N/A';
         template.querySelector('#etip-samples').textContent = ele.data('inter').join(', ') || 'N/A';
         content = template.innerHTML;
     }
@@ -282,13 +284,13 @@ function layout(cy, input) {
     const radius = 40;
     // const center = cy.nodes(`[name = "${input}"]`);
     cy.nodes().forEach(node => {
-        if (node.data('name') === input) {
+        if (node.data('label') === input) {
             const size = radius*(1.5);
             node.style({ 'width': size, 'height': size });
             node.data('size', size);
         }
         else {
-            const edges = node.edgesWith(cy.nodes(`[name = "${input}"]`));
+            const edges = node.edgesWith(cy.$(nodeID[input]));
             const scale = edges.reduce((sum, edge) => sum + edge.data('weight'), 0);
             const size = radius*(scale);
             node.style({ 'width': size, 'height': size });
@@ -430,7 +432,7 @@ document.getElementById('download-btn').addEventListener('click', () => {
         row = document.createElement('tr');
 
         const cellName = document.createElement('td');
-        const geneName = node.data('name');
+        const geneName = node.data('label');
         cellName.textContent = geneName
 
         cellStatus = document.createElement('td');
