@@ -20,7 +20,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header" id="titleText">ecDNA Coamplification Tool</div>
+    <div class="header" id="titleText">ecDNA Coamplification Tool
+        <button id="loadButton">Load graph</button>
+    </div>
     <!-- gene input button -->
     <div class="text-storage">
         <textarea id="textBox" placeholder="Enter gene"></textarea>
@@ -121,24 +123,41 @@
     <script src="frontend.js"></script>
 
     <script>
-        // Update graph with button click
-        $('#storeButton').on('click', loadGraph);
+        // Update graph after entering gene
+        $('#storeButton').on('click', fetchSubgraph);
         $('#textBox').on('keydown', function(event) {
         if (event.key === "Enter") {
             event.preventDefault(); // Prevent default newline behavior
             $('#storeButton').click(); // Simulate button click
             }
         });
-        // Update graph with all-edges checked
-        //$('#all_edges').on('change', loadGraph);
         // Update graph with filter
-        $('#filterButton').on('click', loadGraph);
+        $('#filterButton').on('click', fetchSubgraph);
+
         // Update slider value displays
         document.getElementById('edgeWeight').addEventListener('input', function() {
             document.getElementById('sliderValue').textContent = this.value;
         });
         document.getElementById('numSamples').addEventListener('input', function() {
             document.getElementById('sampleValue').textContent = this.value;
+        });
+
+        // Load in new graph
+        $('#loadButton').on('click', async function() {
+            const button = $(this);  // Reference to the button
+            const originalText = button.text();  // Store original button text
+
+            button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Loading...');
+
+            try {
+                await loadGraph();  // Wait for loadGraph to complete
+                button.text(originalText)
+            } catch (error) {
+                console.error("Error loading graph:", error);
+                button.text("Retry");  // Indicate failure
+            }
+
+            button.prop('disabled', false);  // Re-enable button
         });
     </script>
 </body>

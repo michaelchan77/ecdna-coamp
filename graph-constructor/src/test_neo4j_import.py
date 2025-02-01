@@ -44,7 +44,6 @@ def load_graph():
     start = time.process_time()
 
     with driver.session() as session:
-        
         # add nodes
         session.run(
             """
